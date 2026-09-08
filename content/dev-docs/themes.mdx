@@ -1,0 +1,33 @@
+---
+title: Unmistakably yours
+description: One foundation. A distinct identity for every product.
+---
+## A thoughtful starting point
+
+Spark starts with a dark graphite background, Inter typography, and a warm copper accent. Product themes extend these defaults rather than replacing the entire design system.
+
+## Choose an accent
+
+Set `theme.accent` to a six-digit hexadecimal color. It updates active navigation, links, icons, and focus indicators. Choose a light accent that remains readable against the dark background.
+
+```json
+{
+  "theme": {
+    "accent": "#9cbbdc",
+    "font": "Inter",
+    "branding": "spark"
+  }
+}
+```
+
+## Typography and branding
+
+Supported fonts are Inter, Arial, and Georgia. Inter is optimized with Next.js font loading; Arial and Georgia use local system fonts. The branding field controls the wordmark displayed in the header.
+
+## Safe by default
+
+Missing files and malformed JSON fall back to site defaults. Invalid settings receive schema defaults, so an incorrect accent does not prevent a product from rendering. CSS is applied on the server to avoid a flash of the wrong theme.
+
+## See it in action
+
+Switch to [Film Lore](/docs/film-lore/index) to see the same layout with a cool-blue accent and a completely different content hierarchy.

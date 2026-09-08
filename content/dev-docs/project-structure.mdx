@@ -1,0 +1,32 @@
+---
+title: A place for everything
+description: Simple files. Clear structure. Completely yours.
+---
+## Content lives in your repository
+
+Spark reads product directories directly from `/content`. No database, external CMS, or account is needed. Your Git history is your content history.
+
+```text
+content/
+├── config.schema.json
+├── dev-docs/
+│   ├── config.json
+│   ├── index.mdx
+│   └── getting-started.mdx
+└── film-lore/
+    ├── config.json
+    ├── index.mdx
+    └── characters.mdx
+```
+
+## Product folders
+
+Each top-level directory becomes a product. Folder names use lowercase letters, numbers, and hyphens. Nested folders are supported for deeper documentation hierarchies.
+
+## Page routes
+
+A page at `content/dev-docs/getting-started.mdx` is available at `/docs/dev-docs/getting-started`. Your `index.mdx` is a natural starting point for the product.
+
+## Keep configuration close
+
+The optional `config.json` lives alongside the content it describes. A shared JSON Schema supplies editor hints and runtime validation applies safe defaults.

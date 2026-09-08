@@ -1,0 +1,33 @@
+---
+title: Help ideas find their way
+description: Organize pages into a navigation that feels natural.
+---
+## Groups and pages
+
+Your product config defines sidebar groups and their page order. Each page has a slug, a display title, and an optional icon.
+
+```json
+{
+  "navigation": [
+    {
+      "group": "Get started",
+      "pages": [
+        { "slug": "index", "title": "Introduction", "icon": "book" },
+        { "slug": "getting-started", "title": "Quickstart", "icon": "rocket" }
+      ]
+    }
+  ]
+}
+```
+
+## Automatic discovery
+
+Unlisted MDX pages appear in an additional Documentation group. Links to missing files are removed, so the sidebar only points to real content.
+
+## Switch products
+
+Use the Products menu in the top-right corner. Selecting a product changes its route, sidebar, branding, accent color, and font together.
+
+## Versions
+
+The `version` field currently labels the active documentation release. Routing between multiple releases will be introduced in the versioning phase; changing this label does not create an archived content set.

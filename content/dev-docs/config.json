@@ -1,0 +1,89 @@
+{
+  "name": "Spark",
+  "description": "A little structure for your next big idea.",
+  "motto": "All ideas start with a spark.",
+  "version": "v1.0",
+  "icon": "book",
+  "theme": {
+    "accent": "#e9b78d",
+    "font": "Inter",
+    "branding": "spark"
+  },
+  "navigation": [
+    {
+      "group": "Get started",
+      "pages": [
+        {
+          "slug": "index",
+          "title": "Introduction",
+          "icon": "book"
+        },
+        {
+          "slug": "getting-started",
+          "title": "Quickstart",
+          "icon": "rocket"
+        },
+        {
+          "slug": "project-structure",
+          "title": "Project structure",
+          "icon": "folder"
+        }
+      ]
+    },
+    {
+      "group": "Write & organize",
+      "pages": [
+        {
+          "slug": "writing-content",
+          "title": "Writing content",
+          "icon": "file"
+        },
+        {
+          "slug": "navigation",
+          "title": "Navigation",
+          "icon": "layers"
+        }
+      ]
+    },
+    {
+      "group": "Customize & publish",
+      "pages": [
+        {
+          "slug": "themes",
+          "title": "Themes & branding",
+          "icon": "palette"
+        },
+        {
+          "slug": "configuration",
+          "title": "Configuration",
+          "icon": "settings"
+        },
+        {
+          "slug": "deployment",
+          "title": "Deployment",
+          "icon": "globe"
+        }
+      ]
+    },
+    {
+      "group": "Resources",
+      "pages": [
+        {
+          "slug": "changelog",
+          "title": "Changelog",
+          "icon": "clock"
+        }
+      ]
+    },
+    {
+      "group": "Documentation",
+      "pages": [
+        {
+          "slug": "components",
+          "title": "Components",
+          "icon": "file"
+        }
+      ]
+    }
+  ]
+}

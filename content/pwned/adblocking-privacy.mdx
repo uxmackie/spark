@@ -1,0 +1,116 @@
+---
+title: Adblocking / Privacy
+description: Adblocking, Privacy, VPNs, Proxies, Antiviruses
+draft: true
+---
+# Adblocking
+
+<Tip>
+  Many sites contain ads, popups or redirects, so we [highly recommend](http://127.0.0.1:3000/docs/pwned/getting-started) using an adblocker. Don't run multiple general adblockers (e.g., uBlock Origin and AdGuard) simultaneously to [avoid breakage](https://x.com/gorhill/status/1033706103782170625). Combining general adblockers with tools like SponsorBlock is fine. Also note full version of uBO works significantly better than the lite version.
+</Tip>
+
+- **🔁 Spotify Adblockers**
+- **🔁 Twitch Adblockers**
+- **🔁 Bypass URL Redirects**
+- **🔁 Bypass Article Paywalls**
+- ⭐ [**uBlock Origin**](https://github.com/gorhill/uBlock), [AdGuard](https://github.com/AdguardTeam/AdguardBrowserExtension) or [uBO Lite](https://github.com/uBlockOrigin/uBOL-home) (MV3) / - Adblockers / [Redundant Extensions](https://github.com/arkenfox/user.js/wiki/4.1-Extensions/#-dont-bother)
+- ⭐ **Report Issues** - [uAssets](https://github.com/uBlockOrigin/uAssets/issues) / [Hosts](https://github.com/uBlockOrigin/uAssets/discussions/27472) / [AdGuard](https://reports.adguard.com/new_issue.html) / [EasyList](https://github.com/easylist/easylist/issues)
+- ⭐ [**SponsorBlock**](https://sponsor.ajay.app/) - Skip Sponsored YouTube Ads /  /  /  / 
+- ⭐ **SponsorBlock Tools** - Bookmarklet / Script / Ports / Database / Chromecast
+- [Disblock Origin](https://codeberg.org/AllPurposeMat/Disblock-Origin) or [Discord Adblock](https://codeberg.org/ridge/Discord-AdBlock) - Hide Discord Nitro / Boost Ads
+- [Popup Blocker (strict)](https://github.com/schomery/popup-blocker), [Popupblocker All](https://addons.mozilla.org/firefox/addon/popupblockerall/) / [2](https://chromewebstore.google.com/detail/popupblocker/doklmegfghlnanggfgligimnnikiekde) or [PopUpOFF](https://popupoff.org/) - Popup Blockers / [Userscript](https://github.com/AdguardTeam/PopupBlocker)
+- [BehindTheOverlay](https://github.com/NicolaeNMV/BehindTheOverlay) - Hide Website Overlays
+- [BilibiliSponsorBlock](https://www.bsbsb.top/) - Skip Sponsored Bilibili Ads / 
+
+## Adblocking Filters
+
+<Tip>
+  Always check extra uBO filters in settings before trying third-party filter lists.
+</Tip>
+
+- 🌐 [**FilterLists**](https://filterlists.com/) - Filter / Host List Directory
+- ⭐ [**LegitimateURLShortener**](https://raw.githubusercontent.com/DandelionSprout/adfilt/refs/heads/master/LegitimateURLShortener.txt) - Query Parameter Cleaning Rules / Use with AdGuard URL Tracking Protection
+- ⭐ [**Hagezi Blocklists**](https://github.com/hagezi/dns-blocklists), [2](https://gitlab.com/hagezi/mirror) / [Host Format](https://github.com/hagezi/dns-blocklists-legacy) - Blocklist Collection / Use Mini Editions / 
+- [blacklist](https://github.com/anudeepND/blacklist) - Blocklist Collection / [Whitelist Note](https://github.com/anudeepND/blacklist#common-issues)
+- [hBlock](https://hblock.molinero.dev/) - Blocklist Collection / 
+- [FMHY Filterlist](https://github.com/fmhy/FMHYFilterlist) - Unsafe Sites Filter
+- [AI uBlock Blacklist](https://github.com/alvi-se/ai-ublock-blacklist) - Blocks AI Generated Sites
+- [⁠Huge AI Blocklist](https://github.com/laylavish/uBlockOrigin-HUGE-AI-Blocklist) - Removes AI Imagery from Search Engines
+
+## DNS Adblocking
+
+<Tip>
+  If your goal is to block browser ads, it's best to just stick with uBlock Origin, as additional filters can cause conflicts or anti-adblock.
+</Tip>
+
+- 🌐 [**DNS Providers**](https://adguard-dns.io/kb/general/dns-providers/) - DNS Provider Index
+- 🔁 **Free DNS Resolvers**
+- ⭐ [**Pi-Hole**](https://pi-hole.net/) - Self-Hosted DNS Adblocking /  /  / 
+- ⭐ **Pi-Hole Tools** - [Filters](https://firebog.net/), [2](https://github.com/zachlagden/Pi-hole-Optimized-Blocklists) / [Tray App](https://github.com/PinchToDebug/Pihole-Tray/) / [Android Server](https://github.com/DesktopECHO/Pi-hole-for-Android) (root)
+- ⭐ [**AdGuard Home**](https://adguard.com/en/adguard-home/overview.html) - Self-Hosted DNS Adblocking / [Balena-AdGuard](https://github.com/klutchell/balena-adguard) /  /  /  / 
+- [DNS Speed Test](https://dnsspeedtest.online/) / , [DNS Perf](https://dnsperf.com/dns-speed-benchmark) or [NameBench](https://code.google.com/archive/p/namebench/) - DNS Speed Tests
+- [YogaDNS](https://yogadns.com/) - Custom DNS Client for Windows
+- [NextDNS](https://nextdns.io/) - Customizable DNS Adblocking Service / [Guide](https://github.com/yokoffing/NextDNS-Config) / [Video](https://youtu.be/WUG57ynLb8I) / 
+- [LibreDNS](https://libredns.gr/) - DNS Adblocking / 
+- [Tiarap](https://doh.tiar.app/) - DNS Adblocking / 
+- [Rethink DNS](https://rethinkdns.com/configure) - DNS Adblocking /  / 
+- [DNSWarden](https://dnswarden.com/) - DNS Adblocking / 
+- [Blocky](https://0xerr0r.github.io/blocky/latest/) - DNS Adblocking / 
+- [AdGuard DNS](https://adguard-dns.io/) - Customizable DNS Adblocking Service /  /  / 
+- [Control D](https://controld.com/free-dns) - Customizable DNS Adblocking Service /  /  / 
+- [NxFilter](https://nxfilter.org/) - Self-Hosted Customizable DNS Adblocking / 
+- [TBlock](https://tblock.me/) - DNS Adblocking Client / 
+- [Diversion](https://diversion.ch/) - Asuswrt-Merlin Router Adblock Manager
+- [Phishing Army](https://phishing.army/) - DNS Phishing Blocklist / 
+- [Technitium](https://technitium.com/dns) - Self-Hosted DNS Server /  / 
+
+## DNS Filters
+
+- ⭐ [**Hagezi Blocklists**](https://github.com/hagezi/dns-blocklists), [2](https://gitlab.com/hagezi/mirror) / [Host Format](https://github.com/hagezi/dns-blocklists-legacy) - Multi-Source Domain Blocklist / Use Full Edition / 
+- ⭐ [**OISD**](https://oisd.nl/) - Multi-Source Domain Blocklist / 
+- [hBlock](https://github.com/hectorm/hblock)
+- [Hosts File Aggregator](https://github.com/StevenBlack/hosts)
+- [Spamhaus](https://www.spamhaus.org/blocklists/) / 
+- [black-mirror](https://github.com/T145/black-mirror)
+- [Scam Blocklist](https://github.com/durablenapkin/scamblocklist)
+- [neodevhost](https://github.com/neodevpro/neodevhost)
+- [1Hosts](https://o0.pages.dev/) / [2](https://badmojr.github.io/1Hosts/) / 
+
+---
+
+# Antivirus / Anti-Malware
+
+<Tip>
+  It's best to keep Windows Defender's real-time protection on. You can select ‘Allow on device’ for pirated software detections like patches, or exclude by ‘File‘ in ‘Exclusions’ for false positives when needed + [More Info](https://wispydocs.pages.dev/windows/#antivirus).
+</Tip>
+
+- 🔁 **Virtual Machines**
+- ⭐ [**Malwarebytes**](https://www.malwarebytes.com/) /  or [ESET](https://rentry.co/FMHYB64#eset) - Antivirus
+- ⭐ [**AdwCleaner**](https://www.malwarebytes.com/adwcleaner/) - Anti-Adware / 
+- ⭐ [**Triage**](https://tria.ge/), [ANY.RUN](https://any.run/) /  / or [Cuckoo](https://cuckoo.cert.ee/) / [2](https://sandbox.pikker.ee/) - Online Sandboxes 
+- ⭐ [**Security / Antivirus Multireddit**](https://www.reddit.com/user/goretsky/m/security/) - Reddit Communities
+- ⭐ [**FMHY SafeGuard**](https://fmhy.github.io/FMHY-SafeGuard/) - Detects if Current Site is Trusted / Untrusted / 
+- [BleepingComputer](https://www.bleepingcomputer.com/forums/f/22/virus-trojan-spyware-and-malware-removal-help/), [Malwarebytes Forums](https://forums.malwarebytes.com/forum/7-windows-malware-removal-help-support/) or [Sysnative](https://www.sysnative.com/forums/forums/security-arena.66/) - Malware Removal Forums /
+- [rifteyy](https://rifteyy.org/) - Malware Removal Guides / Blog
+- [Sandboxie Plus](https://sandboxie-plus.com/) - Sandbox Environment / [Guide](https://clarasguide.valeena.workers.dev/Guides/sandboxie-guide/) / 
+- [Windows Sandbox](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/windows-sandbox/windows-sandbox-overview) - Full Virtual Machine Sandbox Environment
+- [Dangerzone](https://dangerzone.rocks/) - Convert Malicious PDFs to Safe Files / 
+- [⁠Ransomware.live](https://www.ransomware.live/) - Live Ransomware Monitor
+- [No More Ransom](https://www.nomoreransom.org/en/decryption-tools.html) - Ransomware Decryption Tools
+- [ID Ransomware](https://id-ransomware.malwarehunterteam.com/) - Ransomware Identification Tool
+- [ConfigureDefender](https://github.com/AndyFul/ConfigureDefender) - Configure Windows Defender Settings
+
+## File Scanners
+
+- 🌐 [**The Second Opinion**](https://jijirae.github.io/thesecondopinion/index.html) - Portable Malware Scanners / Removal Tools / 
+- ⭐ [**VirusTotal**](https://www.virustotal.com/) / [Scan Results Guide](https://clarasguide.valeena.workers.dev/Guides/vtguide/) or [**Hybrid Analysis**](https://hybrid-analysis.com/) - Online File Scanner
+- ⭐ **VirusTotal Tools** - [CLI](https://github.com/VirusTotal/vt-cli) / [Uploader](https://github.com/SamuelTulach/VirusTotalUploader) / [Lite Version](https://www.virustotal.com/old-browsers/)
+- [Jotti](https://virusscan.jotti.org/en) - Online File Scanner
+- [Filescan.io](https://www.filescan.io/) or [⁠MetaDefender Cloud](https://metadefender.com/) - Online File Scanner /  / 
+- [Farbar](https://www.bleepingcomputer.com/download/farbar-recovery-scan-tool/) - Local File Scanner / [Guide](https://www.bleepingcomputer.com/forums/t/781976/)
+- [Microsoft Safety Scanner](https://learn.microsoft.com/en-us/defender-endpoint/safety-scanner-download) - On-demand AV Scanner
+- [Manalyzer](https://manalyzer.org/) - PE File Scanner / 
+- [YARA](https://virustotal.github.io/yara/) - Malware Identification Tool / 
+- [Winitor](https://www.winitor.com/) - EXE Malware Assessment
+- [pyWhat](https://github.com/bee-san/pyWhat) - Identify Anything / 
+- [Grype](https://github.com/anchore/grype) - Container Images Vulnerability Scanner

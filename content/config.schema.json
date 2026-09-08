@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Spark product configuration",
+  "type": "object",
+  "properties": {
+    "name": { "type": "string", "minLength": 1, "maxLength": 60, "default": "Spark Docs" },
+    "description": { "type": "string", "maxLength": 200 },
+    "motto": { "type": "string", "maxLength": 160, "default": "All ideas start from a spark." },
+    "version": { "type": "string", "minLength": 1, "maxLength": 30, "default": "v1.0" },
+    "icon": { "$ref": "#/$defs/icon" },
+    "theme": { "type": "object", "properties": {
+      "accent": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$", "default": "#f0ac73" },
+      "font": { "enum": ["Inter", "Arial", "Georgia"], "default": "Inter" },
+      "branding": { "type": "string", "minLength": 1, "maxLength": 40, "default": "spark" }
+    } },
+    "navigation": { "type": "array", "items": {
+      "type": "object", "required": ["group", "pages"], "properties": {
+        "group": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "pages": { "type": "array", "items": {
+          "type": "object", "required": ["slug", "title"], "properties": {
+            "slug": { "type": "string", "pattern": "^[a-z0-9-]+(/[a-z0-9-]+)*$" },
+            "title": { "type": "string", "minLength": 1, "maxLength": 100 },
+            "icon": { "$ref": "#/$defs/icon" }
+          }
+        } }
+      }
+    } }
+  },
+  "$defs": { "icon": { "enum": ["book", "rocket", "code", "layers", "file", "palette", "globe", "film", "users", "clock", "folder", "settings"] } }
+}

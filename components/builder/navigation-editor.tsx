@@ -1,0 +1,59 @@
+'use client'
+import { useMemo, useState } from 'react'
+import { type ProductConfig } from '@/lib/product-config'
+import { flattenNavigation, isContainer, legacyNavigation, insertNavigation, moveNavigation, removeNavigation, updateNavigation, type NavigationNode, type NavigationKind } from '@/lib/navigation'
+import { ProductIcon } from '@/components/docs/icons'
+import { Plus, MoreHorizontal, ChevronRight, Search, LayoutTemplate } from '@/components/icons/font-awesome'
+import { IconPicker } from './icon-picker'
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+
+type Page = { slug: string; title: string; draft: boolean }
+type Props = { config: ProductConfig; pages: Page[]; activeSlug?: string; busy: boolean; onChange: (tree: NavigationNode[]) => Promise<boolean>; onOpen: (slug: string) => void; onNewPage: (parent: string | null) => void; onNewProduct: () => void }
+const kinds: [NavigationKind, string][] = [['group', 'group'], ['tab', 'tab'], ['dropdown', 'dropdown'], ['anchor', 'anchor'], ['language', 'language'], ['version', 'version'], ['menu', 'menu item']]
+export function NavigationEditor({ config, pages, activeSlug, busy, onChange, onOpen, onNewPage, onNewProduct }: Props) {
+  const tree = useMemo(() => config.navigationTree ?? legacyNavigation(config.navigation), [config])
+  const [query, setQuery] = useState('')
+  const [collapsed, setCollapsed] = useState<Set<string>>(new Set())
+  const [draft, setDraft] = useState<{ node: NavigationNode; parent: string | null; creating: boolean } | null>(null)
+  const [dragging, setDragging] = useState<string | null>(null)
+  const [target, setTarget] = useState<{ id: string; placement: 'before' | 'after' | 'inside' } | null>(null)
+  const nodes = flattenNavigation(tree)
+  const listed = new Set(nodes.filter(n => n.type === 'page').map(n => n.slug))
+  const unlisted = pages.filter(page => !listed.has(page.slug))
+  const matches = (node: NavigationNode): boolean => !query || `${node.title} ${node.slug ?? ''}`.toLowerCase().includes(query.toLowerCase()) || !!node.children?.some(matches)
+  function create(type: NavigationKind, parent: string | null) { setDraft({ creating: true, parent, node: { id: crypto.randomUUID(), type, title: '', icon: type === 'group' ? 'folder' : type === 'tab' ? 'layers' : type === 'anchor' ? 'globe' : 'book', ...(!['anchor', 'menu', 'page'].includes(type) ? { children: [] } : { href: '' }) } }) }
+  const save = async (next: NavigationNode[]) => onChange(next)
+  function addMenu(parent: string | null) { return <>
+    <DropdownMenuItem disabled={busy} onClick={async () => { if (!config.navigationTree && !(await save(tree))) return; onNewPage(parent) }}>New page</DropdownMenuItem>
+    <DropdownMenuSub><DropdownMenuSubTrigger>Add existing page</DropdownMenuSubTrigger><DropdownMenuSubContent className="studio-context-menu">{pages.map(page => <DropdownMenuItem key={page.slug} onClick={() => void save(insertNavigation(tree, { id: crypto.randomUUID(), type: 'page', title: page.title, icon: 'file', slug: page.slug }, parent))}>{page.title}</DropdownMenuItem>)}{!pages.length && <DropdownMenuItem disabled>No pages yet</DropdownMenuItem>}</DropdownMenuSubContent></DropdownMenuSub>
+    {kinds.map(([type, label]) => <DropdownMenuItem key={type} onClick={() => create(type, parent)}>New {label}</DropdownMenuItem>)}
+    <DropdownMenuSeparator /><DropdownMenuItem onClick={onNewProduct}>New product</DropdownMenuItem>
+  </> }
+  function row(node: NavigationNode, parent: string | null, siblings: NavigationNode[], index: number, depth: number) {
+    if (!matches(node)) return null
+    const container = isContainer(node), closed = collapsed.has(node.id) && !query
+    const descendants = new Set(flattenNavigation([node]).map(item => item.id))
+    return <div key={node.id} className="studio-nav-branch">
+      <div className={`studio-nav-row ${node.hidden ? 'is-unpublished' : ''} ${node.slug === activeSlug ? 'is-current' : ''} ${target?.id === node.id ? `drop-${target.placement}` : ''}`} style={{ paddingLeft: 6 + depth * 15 }} draggable={!busy && !query} onDragStart={event => { event.stopPropagation(); event.dataTransfer.setData('application/spark-navigation', node.id); event.dataTransfer.effectAllowed = 'move'; setDragging(node.id) }} onDragEnd={() => { setDragging(null); setTarget(null) }} onDragOver={event => { if (busy || query || !event.dataTransfer.types.includes('application/spark-navigation')) return; event.preventDefault(); event.stopPropagation(); const bounds = event.currentTarget.getBoundingClientRect(); const ratio = (event.clientY - bounds.top) / bounds.height; setTarget({ id: node.id, placement: ratio < .25 ? 'before' : ratio > .75 || !container ? 'after' : 'inside' }) }} onDrop={event => { if (busy || !target || target.id !== node.id) return; event.preventDefault(); event.stopPropagation(); const id = event.dataTransfer.getData('application/spark-navigation'); if (id) void save(moveNavigation(tree, id, node.id, target.placement)); setDragging(null); setTarget(null) }}>
+        {container && <button className="studio-nav-chevron" aria-label={`${closed ? 'Expand' : 'Collapse'} ${node.title}`} aria-expanded={!closed} onClick={() => setCollapsed(previous => { const next = new Set(previous); if (next.has(node.id)) next.delete(node.id); else next.add(node.id); return next })}><ChevronRight size={10} className={closed ? '' : 'rotate-90'} /></button>}
+        <button className="studio-nav-open" aria-current={node.slug === activeSlug ? 'page' : undefined} onClick={() => node.type === 'page' && node.slug ? onOpen(node.slug) : setDraft({ node, parent, creating: false })}>{node.type === 'tab' ? <LayoutTemplate size={14} /> : <ProductIcon name={node.icon} className="size-3.5" />}<span>{node.title}</span></button>
+        <div className="studio-nav-row-actions">{container && <DropdownMenu><DropdownMenuTrigger disabled={busy} aria-label={`Add inside ${node.title}`}><Plus size={12} /></DropdownMenuTrigger><DropdownMenuContent className="studio-context-menu">{addMenu(node.id)}</DropdownMenuContent></DropdownMenu>}
+          <DropdownMenu><DropdownMenuTrigger disabled={busy} aria-label={`Options for ${node.title}`}><MoreHorizontal size={14} /></DropdownMenuTrigger><DropdownMenuContent className="studio-context-menu">
+            {container && <>{addMenu(node.id)}<DropdownMenuSeparator /></>}
+            <DropdownMenuItem onClick={() => setDraft({ node, parent, creating: false })}>{node.type === 'tab' ? 'Tab settings / Rename' : 'Settings / Rename'}</DropdownMenuItem>
+            {container && <DropdownMenuSub><DropdownMenuSubTrigger>Convert to</DropdownMenuSubTrigger><DropdownMenuSubContent className="studio-context-menu">{kinds.filter(([type]) => !['anchor', 'menu'].includes(type)).map(([type, label]) => <DropdownMenuItem key={type} onClick={() => void save(updateNavigation(tree, node.id, { type }))}>{label}</DropdownMenuItem>)}</DropdownMenuSubContent></DropdownMenuSub>}
+            <DropdownMenuSub><DropdownMenuSubTrigger>Move to</DropdownMenuSubTrigger><DropdownMenuSubContent className="studio-context-menu"><DropdownMenuItem onClick={() => void save(moveNavigation(tree, node.id, null, 'inside'))}>Navigation root</DropdownMenuItem>{nodes.filter(n => isContainer(n) && !descendants.has(n.id)).map(n => <DropdownMenuItem key={n.id} onClick={() => void save(moveNavigation(tree, node.id, n.id, 'inside'))}>{n.title}</DropdownMenuItem>)}</DropdownMenuSubContent></DropdownMenuSub>
+            <DropdownMenuItem disabled={index === 0} onClick={() => void save(moveNavigation(tree, node.id, siblings[index - 1].id, 'before'))}>Move up</DropdownMenuItem><DropdownMenuItem disabled={index === siblings.length - 1} onClick={() => void save(moveNavigation(tree, node.id, siblings[index + 1].id, 'after'))}>Move down</DropdownMenuItem>
+            <DropdownMenuSeparator /><DropdownMenuItem onClick={() => void save(updateNavigation(tree, node.id, { hidden: !node.hidden }))}>{node.hidden ? 'Include in navigation' : 'Remove from publishing'}</DropdownMenuItem><DropdownMenuItem onClick={() => { if (window.confirm(`Remove “${node.title}” from navigation? Its MDX files will stay in the project.`)) void save(removeNavigation(tree, node.id)) }}>Remove navigation item</DropdownMenuItem>
+          </DropdownMenuContent></DropdownMenu>
+        </div>
+      </div>
+      {container && !closed && <div>{(node.children ?? []).map((child, i, all) => row(child, node.id, all, i, depth + 1))}</div>}
+    </div>
+  }
+  return <><div className="studio-navigation-heading"><span>Navigation</span><DropdownMenu><DropdownMenuTrigger disabled={busy} className="studio-navigation-add" aria-label="Add navigation item"><Plus size={15} /></DropdownMenuTrigger><DropdownMenuContent className="studio-context-menu">{addMenu(null)}</DropdownMenuContent></DropdownMenu></div><label className="studio-search"><Search size={14} /><input placeholder="Find a page…" aria-label="Search navigation" value={query} onChange={event => setQuery(event.target.value)} /></label>
+    <nav className="studio-navigation-tree" aria-label="Product navigation">{tree.map((node, i) => row(node, null, tree, i, 0))}{!tree.length && <p className="studio-muted">Add your first page, group, or tab.</p>}{unlisted.length > 0 && <details className="studio-unlisted"><summary>Unlisted pages ({unlisted.length})</summary>{unlisted.filter(page => page.title.toLowerCase().includes(query.toLowerCase())).map(page => <div key={page.slug}><button onClick={() => onOpen(page.slug)}>{page.title}</button><button disabled={busy} aria-label={`Add ${page.title} to navigation`} onClick={() => void save(insertNavigation(tree, { id: crypto.randomUUID(), type: 'page', slug: page.slug, title: page.title, icon: 'file' }, null))}><Plus size={12} /></button></div>)}</details>}{dragging && <div className="studio-nav-root-drop" onDragOver={event => event.preventDefault()} onDrop={event => { event.preventDefault(); const id = event.dataTransfer.getData('application/spark-navigation'); if (id) void save(moveNavigation(tree, id, null, 'inside')); setDragging(null); setTarget(null) }}>Move to navigation root</div>}</nav>
+    <Dialog open={draft !== null} onOpenChange={open => { if (!open) setDraft(null) }}><DialogContent className="studio-dialog sm:max-w-lg"><DialogTitle>{draft?.creating ? 'New ' : 'Edit '}{draft?.node.type}</DialogTitle><DialogDescription>Organize this product’s navigation. Page files remain in place.</DialogDescription>{draft && <form className="studio-product-form" onSubmit={async event => { event.preventDefault(); if (await save(draft.creating ? insertNavigation(tree, draft.node, draft.parent) : updateNavigation(tree, draft.node.id, draft.node))) setDraft(null) }}><fieldset disabled={busy}><label>Name<input required maxLength={100} autoFocus value={draft.node.title} onChange={event => setDraft({ ...draft, node: { ...draft.node, title: event.target.value } })} /></label>{['anchor', 'menu'].includes(draft.node.type) && <label>Destination<input required placeholder="https://example.com or /docs/product/page" value={draft.node.href ?? ''} onChange={event => setDraft({ ...draft, node: { ...draft.node, href: event.target.value } })} /></label>}<IconPicker value={draft.node.icon} onChange={icon => setDraft({ ...draft, node: { ...draft.node, icon } })} /><label className="studio-checkbox"><input type="checkbox" checked={!draft.node.hidden} onChange={event => setDraft({ ...draft, node: { ...draft.node, hidden: !event.target.checked } })} /> Show in navigation</label><button type="submit" className="studio-save">Save navigation item</button></fieldset></form>}</DialogContent></Dialog>
+  </>
+}

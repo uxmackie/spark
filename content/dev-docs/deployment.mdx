@@ -1,0 +1,19 @@
+---
+title: Ready for the world
+description: Repository-powered content. Statically generated pages.
+---
+## Build from your content
+
+Spark enumerates product directories and MDX files during the Next.js production build. Every discovered document gets a statically generated route through `generateStaticParams`.
+
+## Publish on Vercel
+
+Connect this project to Vercel and publish it. Your committed content is included in the build. When you update a page and redeploy, the new version becomes available to readers.
+
+## Keep production read-only
+
+The foundation contains no write endpoints. The planned visual editor will only write to the local filesystem in development; production deployments will remain read-only.
+
+## Trust your content
+
+MDX is executable content. Review contributions before merging and only compile pages from trusted repository authors. Do not accept arbitrary public MDX uploads.

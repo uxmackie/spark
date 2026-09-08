@@ -1,0 +1,35 @@
+---
+title: A small file. A lot of possibility.
+description: Your product's identity and navigation, in one readable config.
+---
+## Configuration reference
+
+Link `config.json` to the shared schema for autocompletion and validation in compatible editors.
+
+```json
+{
+  "$schema": "../config.schema.json",
+  "name": "Spark Docs",
+  "description": "The guide to building with Spark.",
+  "motto": "All ideas start from a spark.",
+  "version": "v1.0",
+  "icon": "code",
+  "theme": {
+    "accent": "#f0ac73",
+    "font": "Inter",
+    "branding": "spark"
+  }
+}
+```
+
+## Identity
+
+**name** appears in the product switcher and sidebar. **description** appears on product cards. **motto** provides the short phrase in the sidebar footer. **version** is the current release label.
+
+## Icons
+
+Available icon names include `book`, `rocket`, `code`, `layers`, `file`, `palette`, `globe`, `film`, `users`, `clock`, `folder`, and `settings`.
+
+## Fallback behavior
+
+A product without a config still renders. The site defaults supply its theme and all discovered MDX pages become its navigation. Unknown config keys are ignored.

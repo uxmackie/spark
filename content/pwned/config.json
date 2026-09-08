@@ -1,0 +1,74 @@
+{
+  "name": "pwned",
+  "description": "The home of all free media.",
+  "motto": "Free media? Heck yeah!",
+  "version": "v1.1",
+  "icon": "terminal",
+  "theme": {
+    "accent": "#ac80ff",
+    "font": "Inter",
+    "branding": "pwned"
+  },
+  "inspiration": {
+    "enabled": true,
+    "icon": "lightbulb",
+    "title": "Emoji Legends",
+    "description": "🌐 - Indexes\n🔁 - Section Links\n🐐 - Highly Regarded\n⭐ - Recommendations"
+  },
+  "navigation": [
+    {
+      "group": "pwned",
+      "pages": [
+        {
+          "slug": "getting-started",
+          "title": "Getting Started",
+          "icon": "globe"
+        },
+        {
+          "slug": "adblocking-privacy",
+          "title": "Adblocking / Privacy",
+          "icon": "shield"
+        }
+      ]
+    }
+  ],
+  "navigationTree": [
+    {
+      "id": "group-0",
+      "type": "group",
+      "title": "pwned",
+      "icon": "folder",
+      "children": [
+        {
+          "id": "page-0-0",
+          "type": "page",
+          "title": "Getting Started",
+          "icon": "globe",
+          "slug": "getting-started"
+        }
+      ]
+    },
+    {
+      "id": "0d4061fd-5c88-4d40-8a98-63f3ae845033",
+      "type": "group",
+      "title": "Wiki",
+      "icon": "book",
+      "children": [
+        {
+          "id": "page-0-1",
+          "type": "page",
+          "title": "Adblocking / Privacy",
+          "icon": "shield",
+          "slug": "adblocking-privacy"
+        }
+      ]
+    },
+    {
+      "id": "031e623a-1846-40c2-9f47-61278b051048",
+      "type": "page",
+      "slug": "untitled-1",
+      "title": "Test Page",
+      "icon": "file"
+    }
+  ]
+}

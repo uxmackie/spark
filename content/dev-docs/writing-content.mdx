@@ -1,0 +1,34 @@
+---
+title: Room for every kind of story
+description: Write straightforward Markdown. Add a little more when you need it.
+---
+## Start with frontmatter
+
+Each MDX file starts with a title and a short description. Spark uses them for page headers, search, and metadata.
+
+```yaml
+---
+title: A thoughtful page title
+description: One sentence that tells readers what to expect.
+---
+```
+
+## Format your ideas
+
+Use **bold** for emphasis, lists to make steps scannable, and headings to organize your page. Second-level headings automatically appear in the table of contents.
+
+- Keep paragraphs focused on one idea.
+- Use descriptive links rather than “click here.”
+- Include working examples when introducing a concept.
+
+## Code belongs here too
+
+Fenced code blocks preserve formatting for examples and configuration. Inline code works well for filenames, variables, and commands.
+
+## Go beyond Markdown
+
+MDX can render trusted React components registered in the content renderer. Spark includes welcome banners, navigation cards, and product cards. Because MDX executes code during compilation, only commit content from trusted authors.
+
+## Visual editing
+
+The local WYSIWYG editor is planned for the editor phase. In this foundation release, edit MDX files in your repository; the development server picks up changes. There are no production write endpoints.

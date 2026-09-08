@@ -1,0 +1,48 @@
+---
+title: Your first spark
+description: From an idea to your first documentation page.
+---
+## Start with a product
+
+Every product has its own directory inside `content`. Start by exploring `dev-docs` for technical documentation or `film-lore` for a story-driven knowledge base.
+
+```text
+content/
+  your-product/
+    config.json
+    index.mdx
+```
+
+## Make it yours
+
+Add a `config.json` to name your product and choose an accent color. Everything is optional: Spark fills in missing settings with site defaults.
+
+```json
+{
+  "name": "Your next big idea",
+  "theme": {
+    "accent": "#f0ac73",
+    "font": "Inter",
+    "branding": "spark"
+  }
+}
+```
+
+## Write your first page
+
+Create `index.mdx` with a frontmatter title and description. Use Markdown for prose and registered MDX components for richer layouts.
+
+```md
+---
+title: Welcome aboard
+description: A home for our team's knowledge.
+---
+
+## Start here
+
+Every great idea deserves a place to grow.
+```
+
+## Keep exploring
+
+Learn how [project structure](/docs/dev-docs/project-structure) keeps things organized, or explore [themes and branding](/docs/dev-docs/themes) to give your product a distinct identity.

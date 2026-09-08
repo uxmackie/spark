@@ -1,0 +1,15 @@
+{
+  "$schema": "../config.schema.json",
+  "name": "Film Lore",
+  "description": "Every story has a universe. Explore it.",
+  "motto": "Every great story starts with a spark.",
+  "version": "v1.0",
+  "icon": "film",
+  "theme": { "accent": "#9cbbdc", "font": "Inter", "branding": "spark" },
+  "navigation": [
+    { "group": "The universe", "pages": [
+      { "slug": "index", "title": "Welcome to the archive", "icon": "book" },
+      { "slug": "characters", "title": "Characters", "icon": "users" }
+    ] }
+  ]
+}

@@ -1,0 +1,78 @@
+---
+title: Components
+description: A small library for pages with a little more to say.
+icon: layers
+draft: false
+---
+<Badge>NEW IN SPARK STUDIO</Badge>
+
+## A little emphasis
+
+Use Markdown inside callouts to make the important parts easy to find.
+
+<Note>
+  Your documentation, with **room to grow**. Switch between visual, source, and preview modes without rewriting your MDX.
+</Note>
+
+<Tip>
+  Double-click a block to edit it. Apply your changes, then save the page with **Ctrl / ⌘ S**.
+</Tip>
+
+<Warning>
+  Saving writes to this local project. Commit and deploy your changes through your normal repository workflow.
+</Warning>
+
+## Give readers somewhere to go
+
+<CardGroup cols={2}>
+  <Card title="Start with a spark" icon="rocket" href="/docs/dev-docs/getting-started">
+    Everything you need for your first page.
+  </Card>
+  <Card title="Make it yours" icon="code" href="/docs/dev-docs/themes">
+    Give your documentation its own personality.
+  </Card>
+</CardGroup>
+
+## One space, different perspectives
+
+<Tabs>
+  <Tab title="Write">
+    Choose a page in the sidebar, then add a heading, paragraph, or component. Each block keeps its original Markdown and JSX.
+  </Tab>
+  <Tab title="Build">
+    ```typescript example.ts
+    const idea = "Something worth sharing"
+
+    console.log(idea)
+    ```
+  </Tab>
+</Tabs>
+
+## From idea to page
+
+<Steps>
+  <Step title="Give it a home">
+    Create a product, or choose an existing one.
+  </Step>
+  <Step title="Make your first page">
+    Set a title and description. Add a few components to tell your story.
+  </Step>
+  <Step title="Save your work">
+    Review the preview and save the MDX to your project.
+  </Step>
+</Steps>
+
+## The details, when you need them
+
+<AccordionGroup>
+  <Accordion title="Can I use my existing custom components?">
+    Yes. The editor keeps unknown JSX intact. Existing Spark components have previews; other custom components appear as preserved placeholders. Register their trusted implementations in the docs renderer.
+  </Accordion>
+  <Accordion title="Does this run arbitrary JavaScript in the editor?">
+    No. The editor parses MDX and previews literal component properties. Dynamic expressions and imports are preserved as source without being evaluated.
+  </Accordion>
+</AccordionGroup>
+
+<Frame caption="All ideas start from a spark.">
+  ![Graphite notebooks with a copper spark emblem](/images/spark-cover.png)
+</Frame>

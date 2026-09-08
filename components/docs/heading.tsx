@@ -1,7 +1,8 @@
 'use client'
-import { useState, createElement, type ReactNode } from 'react'
-import { Copy } from '@/components/icons/font-awesome'
+import { useState, useEffect, createElement, type ReactNode } from 'react'
+import { LinkIcon, Check } from '@/components/icons/font-awesome'
 export function Heading({ level, id, children }: { level: number; id?: string; children?: ReactNode }) {
   const [status, setStatus] = useState('')
-  return createElement(`h${level}`, { id, className: 'doc-heading' }, <><a className="doc-heading-anchor" href={`#${id}`}>{children}</a><button type="button" className="doc-heading-copy" aria-label="Copy section link" title={status || 'Copy section link'} onClick={async () => { try { const url = new URL(window.location.href); url.hash = id ?? ''; await navigator.clipboard.writeText(url.href); setStatus('Copied') } catch { setStatus('Copy unavailable') } }}><Copy className="size-3" /></button><span className="sr-only" role="status">{status}</span></>)
+  useEffect(() => { if (!status) return; const timer = setTimeout(() => setStatus(''), 2500); return () => clearTimeout(timer) }, [status])
+  return createElement(`h${level}`, { id, className: 'doc-heading' }, <><button type="button" className="doc-heading-copy" aria-label="Copy section link" title={status || 'Copy section link'} onClick={async () => { try { const url = new URL(window.location.href); url.hash = id ?? ''; await navigator.clipboard.writeText(url.href); setStatus('Copied') } catch { setStatus('Copy unavailable') } }}><>{status === 'Copied' ? <Check className="size-3" aria-hidden="true" /> : <LinkIcon className="size-3" aria-hidden="true" />}</></button><a className="doc-heading-anchor" href={`#${id}`}>{children}</a><span className="sr-only" role="status">{status}</span></>)
 }

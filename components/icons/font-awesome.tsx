@@ -17,3 +17,5 @@ export const FileText = icon(fa.faFileLines), Folder = icon(fa.faFolder), Layout
 export const Asterisk = icon(fa.faAsterisk), Lightbulb = icon(fa.faLightbulb), Moon = icon(fa.faMoon), Sun = icon(fa.faSun), List = icon(fa.faList), Command = icon(fa.faKeyboard), Braces = icon(fa.faCode), FolderGit2 = icon(fa.faFolderTree), Palette = icon(fa.faPalette), Rocket = icon(fa.faRocket)
 export const Info = icon(fa.faCircleInfo), TriangleAlert = icon(fa.faTriangleExclamation), CircleCheck = icon(fa.faCircleCheck), OctagonAlert = icon(fa.faCircleExclamation)
 export const GripVertical = icon(fa.faGripVertical)
+
+export const LinkIcon = icon(fa.faLink)

@@ -46,8 +46,9 @@ export function Badge({ children }: Content) { return <span className="mdx-badge
 export function Tooltip({ children, tip = "", headline, cta, href }: Content & { tip?: string; headline?: string; cta?: string; href?: string }) {
   return <Popover.Root><Popover.Trigger openOnHover delay={150} closeDelay={150} className="mdx-tooltip-trigger">{children}</Popover.Trigger><Popover.Portal><Popover.Positioner side="top" sideOffset={8} className="mdx-tooltip-positioner"><Popover.Popup className="mdx-tooltip-popup" initialFocus={false} aria-label={headline || 'More information'}>{headline && <Popover.Title className="mdx-tooltip-heading">{headline}</Popover.Title>}<Popover.Description className="mdx-tooltip-description">{tip}</Popover.Description>{cta && safeUrl(href) && <a className="mdx-tooltip-cta" href={safeUrl(href)}>{cta} ↗</a>}</Popover.Popup></Popover.Positioner></Popover.Portal></Popover.Root>
 }
-export function Emoji({ icon = 'face-smile', label }: Content & { icon?: string; label?: string }) {
-  return <span role="img" aria-label={label || iconLabel(icon)} className="mdx-emoji"><ProductIcon name={icon} className="mdx-emoji-icon" /></span>
+export function Emoji({ icon = 'face-smile', label, tip, headline, cta, href }: Content & { icon?: string; label?: string; tip?: string; headline?: string; cta?: string; href?: string }) {
+  const symbol = <span role="img" aria-label={label || iconLabel(icon)} className="mdx-emoji"><ProductIcon name={icon} className="mdx-emoji-icon" /></span>
+  return tip?.trim() ? <Tooltip tip={tip} headline={headline} cta={cta} href={href}>{symbol}</Tooltip> : symbol
 }
 export const Icon = Emoji
 export const mdxComponents = { Note, Info, Tip, Warning, Check, Danger, Card, CardGroup, Columns, Tabs, Tab, Steps, Step, Accordion, AccordionGroup, Frame, Badge, Tooltip, Emoji, Icon }

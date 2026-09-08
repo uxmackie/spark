@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Check, Copy, List } from '@/components/icons/font-awesome'
+import { Check, Copy } from '@/components/icons/font-awesome'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -21,5 +21,5 @@ export function TableOfContents({ headings }: { headings: { title: string; id: s
     for (const heading of headings) { const element = document.getElementById(heading.id); if (element) observer.observe(element) }
     return () => observer.disconnect()
   }, [headings])
-  return <nav aria-label="On this page" className="flex flex-col gap-5"><p className="flex items-center gap-2 text-sm font-medium"><List className="size-4 text-muted-foreground" />On this page</p><div className="flex flex-col gap-4 border-l">{headings.map(heading => <a key={heading.id} style={{ paddingLeft: 16 + (heading.depth - Math.min(...headings.map(h => h.depth))) * 16 }} onClick={() => setActive(heading.id)} href={`#${heading.id}`} className={cn('-ml-px border-l-2 pl-4 text-sm leading-6 transition-colors', active === heading.id ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground')}>{heading.title}</a>)}</div></nav>
+  return <nav aria-label="On this page" className="flex flex-col gap-3"><p className="text-xs font-normal leading-4">On this page</p><div className="flex flex-col gap-3">{headings.map(heading => <a key={heading.id} style={{ paddingLeft: (heading.depth - Math.min(...headings.map(h => h.depth))) * 16 }} onClick={() => setActive(heading.id)} href={`#${heading.id}`} className={cn('text-sm leading-5 transition-colors', active === heading.id ? 'text-primary' : 'text-muted-foreground hover:text-foreground')}>{heading.title}</a>)}</div></nav>
 }

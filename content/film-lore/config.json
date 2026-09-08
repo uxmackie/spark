@@ -7,9 +7,12 @@
   "icon": "film",
   "theme": { "accent": "#9cbbdc", "font": "Inter", "branding": "spark" },
   "navigation": [
-    { "group": "The universe", "pages": [
-      { "slug": "index", "title": "Welcome to the archive", "icon": "book" },
-      { "slug": "characters", "title": "Characters", "icon": "users" }
-    ] }
+    {
+      "group": "The universe",
+      "pages": [
+        { "slug": "index", "title": "Welcome to the archive", "icon": "book" },
+        { "slug": "characters", "title": "Characters", "icon": "users" }
+      ]
+    }
   ]
 }

@@ -1,7 +1,13 @@
-import { faBookOpen, faRocket, faCode, faLayerGroup, faFileLines, faPalette, faGlobe, faFilm, faUsers, faClock, faFolderOpen, faGear, faStar, faHeart, faBolt, faGamepad, faMusic, faCamera, faImage, faLightbulb, faGraduationCap, faFlask, faDatabase, faTerminal, faShieldHalved, faCloud, faCompass, faMap, faCalendar, faComment, faBell, faTrophy, faPuzzlePiece, faCube, faPen, faHouse, faFaceSmile, faFaceLaugh, faFaceGrinHearts, faFaceGrinStars, faFaceGrinWink, faFaceSurprise, faFaceSadTear, faFaceAngry, faFaceMeh, faFaceKissWinkHeart, faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons'
-import type { ProductIconName } from '@/lib/icon-catalog'
+import { fas } from '@fortawesome/free-solid-svg-icons'
 import { icon, config, type IconDefinition } from '@fortawesome/fontawesome-svg-core'
+import { normalizeIconName } from '@/lib/icon-catalog'
 config.autoAddCss = false
-export const icons: Record<ProductIconName, IconDefinition> = { book: faBookOpen, rocket: faRocket, code: faCode, layers: faLayerGroup, file: faFileLines, palette: faPalette, globe: faGlobe, film: faFilm, users: faUsers, clock: faClock, folder: faFolderOpen, settings: faGear, star: faStar, heart: faHeart, bolt: faBolt, gamepad: faGamepad, music: faMusic, camera: faCamera, image: faImage, lightbulb: faLightbulb, 'graduation-cap': faGraduationCap, flask: faFlask, database: faDatabase, terminal: faTerminal, shield: faShieldHalved, cloud: faCloud, compass: faCompass, map: faMap, calendar: faCalendar, comment: faComment, bell: faBell, trophy: faTrophy, 'puzzle-piece': faPuzzlePiece, cube: faCube, pen: faPen, house: faHouse, 'face-smile': faFaceSmile, 'face-laugh': faFaceLaugh, 'face-grin-hearts': faFaceGrinHearts, 'face-grin-stars': faFaceGrinStars, 'face-grin-wink': faFaceGrinWink, 'face-surprise': faFaceSurprise, 'face-sad-tear': faFaceSadTear, 'face-angry': faFaceAngry, 'face-meh': faFaceMeh, 'face-kiss-wink-heart': faFaceKissWinkHeart, 'thumbs-up': faThumbsUp, 'thumbs-down': faThumbsDown }
-
-export function iconMarkup(name: string) { return icon(icons[name as ProductIconName] ?? icons.file).html.join('') }
+export const icons: Record<string, IconDefinition> = Object.create(null)
+for (const definition of Object.values(fas)) {
+  icons[definition.iconName] = definition
+  for (const alias of definition.icon[2]) if (typeof alias === 'string') icons[alias] = definition
+}
+// Preserve the appearance of names used by existing Spark products.
+Object.assign(icons, { book: fas.faBookOpen, file: fas.faFileLines, layers: fas.faLayerGroup, folder: fas.faFolderOpen, settings: fas.faGear, shield: fas.faShieldHalved })
+export function resolveIcon(name = 'file') { return icons[normalizeIconName(name)] ?? icons.file }
+export function iconMarkup(name: string) { return icon(resolveIcon(name)).html.join('') }

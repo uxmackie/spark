@@ -15,3 +15,5 @@
 .studio-page-link-results{display:grid;gap:4px;max-height:240px;overflow:auto}.studio-page-link-results button{display:flex;flex-direction:column;align-items:start;text-align:left;width:100%;padding:8px}.studio-page-link-results small{color:var(--muted-foreground)}.studio-editable [data-mdx-raw]{display:inline-block;border-radius:4px;background:var(--accent);padding:0 3px;font-size:.9em}
 
 .studio-emoji-picker{max-height:280px;overflow:auto}.studio-emoji-picker>input{flex-basis:100%;min-width:0;border:1px solid var(--border);border-radius:5px;padding:8px;background:var(--background)}.studio-editable [data-mdx-raw] svg{width:1em;height:1em;vertical-align:-.125em}.studio-selection-toolbar{max-width:calc(100vw - 16px);flex-wrap:wrap}
+
+.studio-use-icon{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin:8px 0;font-size:12px}.studio-icon-grid{max-height:300px;overflow:auto}

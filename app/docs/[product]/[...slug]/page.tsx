@@ -1,3 +1,4 @@
+import { sparkIcons } from '@/lib/spark-logo'
 import type { Metadata } from 'next'
 import { Document } from '@/components/docs/document'
 import { getDocument, getPageList, getProducts } from '@/lib/content'
@@ -14,8 +15,9 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { product, slug } = await params
-  const document = await getDocument(product, slug)
-  return { title: document?.title ?? 'Page not found', description: document?.description }
+  const [document, products] = await Promise.all([getDocument(product, slug), getProducts()])
+  const accent = products.find(item => item.slug === product)?.config.theme.accent
+  return { icons: sparkIcons(accent), title: document?.title ?? 'Page not found', description: document?.description }
 }
 
 export default async function DocPage({ params }: Props) {

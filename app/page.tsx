@@ -1,3 +1,5 @@
+import { getProducts } from '@/lib/content'
+import { sparkIcons } from '@/lib/spark-logo'
 import Link from 'next/link'
 import { Document } from '@/components/docs/document'
 

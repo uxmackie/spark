@@ -14,7 +14,7 @@ export function inlineHtml(nodes: MdxNode[], source: string): string {
     const raw = node.position ? source.slice(node.position.start.offset, node.position.end.offset) : node.value ?? ''
     const attribute = (name: string) => { const value = node.attributes?.find(attr => attr.name === name)?.value; if (typeof value === 'string') return value; const expression = (value as { data?: { estree?: { body?: { expression?: { type?: string; value?: unknown } }[] } } })?.data?.estree?.body?.[0]?.expression; return expression?.type === 'Literal' && typeof expression.value === 'string' ? expression.value : undefined }
     const display = ['Icon', 'Emoji'].includes(node.name ?? '') ? iconMarkup(attribute('icon') ?? 'face-smile') : node.name === 'Tooltip' ? inner : escapeHtml(raw)
-    return `<span contenteditable="false" data-mdx-raw="${escapeHtml(raw)}" title="${escapeHtml(attribute('tip') ?? (node.name === 'Tooltip' ? 'Tooltip' : attribute('icon') ?? 'MDX component'))}">${display}</span>`
+    return `<span class="${attribute('tip')?.trim() || attribute('href')?.trim() ? 'mdx-icon-accent' : ''}" contenteditable="false" data-mdx-raw="${escapeHtml(raw)}" title="${escapeHtml(attribute('tip') ?? (node.name === 'Tooltip' ? 'Tooltip' : attribute('icon') ?? 'MDX component'))}">${display}</span>`
   }).join('')
 }
 const escapeMarkdown = (value: string) => value.replace(/([\\`*_[\]{}<>])/g, '\\$1')

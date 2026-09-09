@@ -4,6 +4,6 @@ export function tooltipMarkup(text: string, fields: { tip: string; headline?: st
   return `<Tooltip ${attrs}>${text}</Tooltip>`
 }
 
-export function iconMdx(name: string, tip = '', emoji = false) {
-  return `<${emoji ? 'Emoji' : 'Icon'} icon={${JSON.stringify(name)}}${tip.trim() ? ` tip={${JSON.stringify(tip)}}` : ''} />`
+export function iconMdx(name: string, tip = '', emoji = false, href = '') {
+  return `<${emoji ? 'Emoji' : 'Icon'} icon={${JSON.stringify(name)}}${tip.trim() ? ` tip={${JSON.stringify(tip)}}` : ''}${href.trim() ? ` href={${JSON.stringify(href.trim())}}` : ''} />`
 }

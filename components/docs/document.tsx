@@ -1,3 +1,4 @@
+import { literalAttributes } from '@/lib/mdx-literal-attributes'
 import { headingAnchors } from '@/lib/headings'
 import { Heading } from '@/components/docs/heading'
 import Link from 'next/link'
@@ -34,7 +35,7 @@ export async function Document({ productSlug, segments }: { productSlug: string;
         <div className="flex items-center justify-between gap-3"><p className="text-sm font-medium text-primary">{section}</p><CopyPage source={document.source} /></div>
         <div className="flex flex-col gap-3 pb-7 pt-4"><h1 className="text-balance text-[32px] font-semibold leading-tight tracking-[-1.2px] sm:text-[36px]">{document.title}</h1><p className="text-pretty text-base leading-relaxed text-muted-foreground">{document.description}</p></div>
         <article className="doc-prose">
-          <MDXRemote source={document.source} options={{ mdxOptions: { remarkPlugins: [headingAnchors] } }} components={{
+          <MDXRemote source={document.source} options={{ mdxOptions: { remarkPlugins: [literalAttributes, headingAnchors] } }} components={{
             Note, Info, Tip, Warning, Check, Danger, Card, CardGroup, Columns, Tabs, Tab, Steps, Step, Accordion, AccordionGroup, Frame, Badge, Tooltip, Emoji, Icon,
             WelcomeBanner,
             GettingStartedCards: () => <GettingStartedCards productSlug={productSlug} />,

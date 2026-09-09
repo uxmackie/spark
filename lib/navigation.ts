@@ -5,7 +5,7 @@ export type NavigationKind = typeof navigationKinds[number]
 export type NavigationNode = { id: string; type: NavigationKind; title: string; icon: ProductIconName; slug?: string; href?: string; hidden?: boolean; children?: NavigationNode[] }
 const safeHref = z.string().max(1000).refine(value => !value || (/^(https?:\/\/|\/(?!\/)|#)/i.test(value) && !/[\s\\]/.test(value)), 'Use a site path, anchor, or HTTP(S) URL')
 export const navigationNodeSchema: z.ZodType<NavigationNode> = z.lazy(() => z.object({
-  id: z.string().min(1).max(100), type: z.enum(navigationKinds), title: z.string().trim().min(1).max(100), icon: z.string().transform(normalizeIconName).refine(isIconName, 'Unknown Font Awesome Free Solid icon'),
+  id: z.string().min(1).max(100), type: z.enum(navigationKinds), title: z.string().trim().min(1).max(100), icon: z.string().transform(normalizeIconName).refine(isIconName, 'Unknown Font Awesome Free Solid or Brands icon'),
   slug: z.string().regex(/^[a-z0-9-]+(?:\/[a-z0-9-]+)*$/).optional(), href: safeHref.optional(), hidden: z.boolean().optional(), children: z.array(navigationNodeSchema).optional(),
 }).superRefine((node, ctx) => {
   if (node.type === 'page' && !node.slug) ctx.addIssue({ code: 'custom', message: 'A page needs a page path' })

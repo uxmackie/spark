@@ -35,6 +35,18 @@
   --sidebar-ring: var(--primary);
 }
 
+/* Root theme survives page remounts and reaches portaled tooltips and menus. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --background: #eeeeec;
+  --foreground: #1a1a1a;
+  --card: #e4e4e1;
+  --popover: #eeeeec;
+  --muted: #e4e4e1;
+  --secondary: #e4e4e1;
+  --muted-foreground: #62625f;
+}
+
 @theme inline {
   --font-sans: var(--product-font, var(--font-inter)), Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Consolas, monospace;

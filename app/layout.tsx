@@ -1,3 +1,4 @@
+import { themeBootstrap } from '@/lib/theme-preference'
 import { sparkIcons } from '@/lib/spark-logo'
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
@@ -12,8 +13,8 @@ export const metadata: Metadata = {
   description: 'A home for your knowledge. Beautiful, repository-powered documentation for your products, stories, and everything in between.',
 }
 
-export const viewport: Viewport = { colorScheme: 'dark', themeColor: '#1a1a1a' }
+export const viewport: Viewport = { colorScheme: 'dark light', themeColor: '#1a1a1a' }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en" className={`dark bg-background ${inter.variable}`}><body className="font-sans antialiased">{children}</body></html>
+  return <html suppressHydrationWarning lang="en" className={`dark bg-background ${inter.variable}`}><body className="font-sans antialiased"><script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />{children}</body></html>
 }

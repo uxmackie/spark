@@ -6,7 +6,7 @@ import type { CSSProperties } from 'react'
 export const slugSchema = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
 const pagePath = z.string().regex(/^[a-z0-9-]+(?:\/[a-z0-9-]+)*$/)
 const color = z.string().regex(/^#[0-9a-fA-F]{6}$/)
-const icon = z.string().transform(normalizeIconName).refine(isIconName, 'Unknown Font Awesome Free Solid icon')
+const icon = z.string().transform(normalizeIconName).refine(isIconName, 'Unknown Font Awesome Free Solid or Brands icon')
 
 export const productConfigSchema = z.object({
   name: z.string().min(1).max(60).catch('Spark Docs'),

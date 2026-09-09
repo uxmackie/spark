@@ -1,5 +1,6 @@
 'use client'
 
+import { useTheme } from './use-theme'
 import { useEffect, useState, type CSSProperties, type ReactNode } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
@@ -15,13 +16,13 @@ import { getThemeVariables, pageHref, type PageInfo, type Product } from '@/lib/
 
 export function DocsShell({ products, activeProduct, pages, children }: { products: Product[]; activeProduct: Product; pages: PageInfo[]; children: ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [light, setLight] = useState(false)
+  const { light, toggleTheme } = useTheme()
   const [chosenTab, setChosenTab] = useState<string | null>(null)
   const pathname = usePathname()
   const router = useRouter()
   useEffect(() => setChosenTab(null), [pathname])
   const { config } = activeProduct
-  const theme = { ...getThemeVariables(config), ...(light ? { '--background': '#eeeeec', '--foreground': '#1a1a1a', '--card': '#e4e4e1', '--popover': '#eeeeec', '--muted': '#e4e4e1', '--secondary': '#e4e4e1', '--muted-foreground': '#62625f', colorScheme: 'light' } : {}) } as CSSProperties
+  const theme = getThemeVariables(config)
   const currentSlug = pathname === '/' ? 'index' : pathname.split('/').slice(3).join('/') || 'index'
   const customTree = config.navigationTree
   const customTabs = customTree?.filter(node => node.type === 'tab' && !node.hidden) ?? []
@@ -48,7 +49,7 @@ export function DocsShell({ products, activeProduct, pages, children }: { produc
             </DropdownMenuContent>
           </DropdownMenu>
           <span className="hidden h-5 border-l sm:block" />
-          <Button variant="ghost" size="icon" onClick={() => setLight(value => !value)} aria-label={light ? 'Switch to dark theme' : 'Switch to light theme'}>{light ? <Moon /> : <Sun />}</Button>
+          <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label={light ? 'Switch to dark theme' : 'Switch to light theme'}>{light ? <Moon /> : <Sun />}</Button>
         </div>
       </div>
       <div className="mx-auto flex h-12 max-w-[1600px] items-center justify-between px-5 md:px-9">

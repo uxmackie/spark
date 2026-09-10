@@ -90,7 +90,7 @@
 .doc-prose > * + * { margin-top: 20px; }
 .doc-prose h2 { margin-top: 38px; font-size: 21px; font-weight: 600; letter-spacing: -0.025em; line-height: 1.4; color: var(--foreground); }
 .doc-prose h3 { margin-top: 28px; font-size: 17px; font-weight: 600; color: var(--foreground); }
-.doc-prose strong { color: var(--foreground); font-weight: 500; }
+.doc-prose strong, .doc-prose b { color: var(--foreground); font-weight: 600; }
 .doc-prose a:not(.doc-card):not(.doc-heading-anchor) { color: var(--primary); text-decoration: underline; text-underline-offset: 4px; }
 .doc-prose ul, .doc-prose ol { padding-left: 24px; }
 .doc-prose ul { list-style: disc; }

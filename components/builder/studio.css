@@ -84,3 +84,19 @@
 .studio-link-checker input{background:#111;color:#eee;border:1px solid #444;border-radius:6px;padding:9px;width:100%}
 .studio-link-checker label{display:grid;gap:8px}.studio-link-targets{max-height:180px;overflow:auto;margin:8px 0}.studio-link-targets button{display:block;width:100%;margin-bottom:4px}.studio-link-targets small{display:block}
 @media(max-width:1100px){.studio-slash-preview{display:none}}
+
+/* One layout owns source text, native selection, and the caret. */
+.studio-source-codemirror .cm-editor{background:transparent;color:#ededed;min-height:calc(100vh - 300px)}
+.studio-source-codemirror .cm-editor.cm-focused{outline:none}
+.studio-source-codemirror .cm-scroller{overflow:visible;font-family:'Paper Mono',ui-monospace,SFMono-Regular,Consolas,monospace;font-size:13px;line-height:22px;font-variant-ligatures:none}
+.studio-source-codemirror .cm-content{padding:0 0 24px;caret-color:#ededed;min-height:calc(100vh - 300px)}
+.studio-source-codemirror .cm-line{padding:0}
+.studio-source-codemirror .cm-content ::selection,.studio-source-codemirror .cm-content::selection{background:#6668}
+.studio-source-codemirror .source-heading{color:#ff675c;font-weight:600}
+.studio-source-codemirror .source-tag{color:#85ed89}
+.studio-source-codemirror .source-key{color:#c3b4ff}
+.studio-source-codemirror .source-string{color:#9cdaff}
+.studio-source-codemirror .source-muted{color:#78818a}
+.studio-source-codemirror .source-bold,.studio-source-codemirror .source-bold-italic{font-weight:600}
+.studio-source-codemirror .source-italic,.studio-source-codemirror .source-bold-italic{font-style:italic}
+@media(max-width:700px){.studio-source-codemirror .cm-scroller{font-size:12px;line-height:21px}}

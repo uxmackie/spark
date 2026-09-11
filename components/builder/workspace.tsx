@@ -10,7 +10,7 @@ import { MdxPreview } from './mdx-preview'
 import './studio.css'
 import { StyledSelect } from '@/components/ui/select'
 import { LinkChecker } from './link-checker'
-import { SourceEditor } from './source-editor'
+import { SourceEditor, type SourceEditorHandle } from './source-editor'
 import { ProductForm } from './product-form'
 import { VisualCanvas } from './visual-canvas'
 import { ComponentMenu } from './component-menu'
@@ -61,7 +61,7 @@ export function BuilderWorkspace({ initialProducts }: { initialProducts: Product
   const toolbarRef = useRef<HTMLDivElement>(null)
   const switchFrame = useRef(0)
   useEffect(() => () => cancelAnimationFrame(switchFrame.current), [])
-  const sourceRef = useRef<HTMLTextAreaElement>(null)
+  const sourceRef = useRef<SourceEditorHandle | null>(null)
   const product = products.find(p => p.slug === selected)
   const dirty = snapshot(page) !== saved || rawDirty
   const parsed = useMemo(() => parseMdx(page?.source ?? ''), [page?.source])
@@ -121,12 +121,13 @@ export function BuilderWorkspace({ initialProducts }: { initialProducts: Product
     if (nextMode === mode || !page) return
     if (rawError && nextMode !== 'source') { setError('Fix the frontmatter before switching modes.'); return }
     const inset = () => (headerRef.current?.offsetHeight ?? 65) + (toolbarRef.current?.offsetHeight ?? 60) + 16
-    const position = capturePosition(contentRef.current, mode === 'source' ? sourceRef.current : null, rawText, page.source, inset())
+    const captured = mode === 'source' ? sourceRef.current?.capture(inset()) : null
+    const position = captured ? { ...captured, offset: Math.max(0, captured.offset - Math.max(0, rawText.indexOf(page.source))) } : capturePosition(contentRef.current, null, rawText, page.source, inset())
     const nextRaw = nextMode === 'source' ? documentSource(page) : rawText
     if (nextMode === 'source') setRawText(nextRaw)
     cancelAnimationFrame(switchFrame.current)
     setMode(nextMode)
-    switchFrame.current = requestAnimationFrame(() => { switchFrame.current = requestAnimationFrame(() => restorePosition(position, contentRef.current, nextMode === 'source' ? sourceRef.current : null, nextRaw, page.source, inset())) })
+    switchFrame.current = requestAnimationFrame(() => { switchFrame.current = requestAnimationFrame(() => { if (nextMode === 'source') sourceRef.current?.restore(Math.max(0, nextRaw.indexOf(page.source)) + position.offset, inset(), position.top); else restorePosition(position, contentRef.current, null, nextRaw, page.source, inset()) }) })
   }
   function editRaw(raw: string) {
     setRawText(raw); setRawDirty(true)

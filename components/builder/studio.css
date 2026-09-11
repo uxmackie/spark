@@ -21,3 +21,5 @@
 .studio-icon-tooltip-field{display:grid;gap:5px;margin:10px 0;font-size:12px}.studio-icon-tooltip-field input{border:1px solid var(--border);border-radius:6px;padding:8px;background:var(--background);color:var(--foreground)}
 
 .studio-icon-tooltip-field textarea,.studio-tooltip-form textarea{border:1px solid var(--border);border-radius:6px;padding:8px;background:var(--background);color:var(--foreground);resize:vertical;min-height:80px;width:100%}
+
+.studio-header{position:sticky;top:0;z-index:40;flex-shrink:0;height:65px;min-height:65px;background:var(--background)}.studio-toolbar{position:sticky;top:65px;z-index:39;background:var(--background);box-shadow:0 1px 0 var(--border)}.studio-preview-blocks{display:flex;flex-direction:column;gap:20px}.studio-preview-blocks>.doc-prose{margin:0}.studio-preview-blocks>div>.doc-prose>:first-child{margin-top:0}

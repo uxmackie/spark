@@ -1,5 +1,6 @@
 'use client'
 
+import { capturePosition, restorePosition } from '@/lib/editor-position'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowDown, ArrowUp, BookOpen, Check, ChevronRight, Code2, Copy, Download, Eye, FileText, Folder, LayoutTemplate, Menu, MoreHorizontal, Pencil, Plus, Redo2, Save, Search, Settings2, Sparkles, Trash2, Undo2, X } from '@/components/icons/font-awesome'
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog'
@@ -48,6 +49,11 @@ export function BuilderWorkspace({ initialProducts }: { initialProducts: Product
   const [future, setFuture] = useState<Page[]>([])
   const [recovery, setRecovery] = useState<Page | null>(null)
   const loadId = useRef(0)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const headerRef = useRef<HTMLElement>(null)
+  const toolbarRef = useRef<HTMLDivElement>(null)
+  const switchFrame = useRef(0)
+  useEffect(() => () => cancelAnimationFrame(switchFrame.current), [])
   const sourceRef = useRef<HTMLTextAreaElement>(null)
   const product = products.find(p => p.slug === selected)
   const dirty = snapshot(page) !== saved || rawDirty
@@ -105,9 +111,15 @@ export function BuilderWorkspace({ initialProducts }: { initialProducts: Product
     window.addEventListener('keydown', handler); return () => window.removeEventListener('keydown', handler)
   })
   function switchMode(nextMode: typeof mode) {
+    if (nextMode === mode || !page) return
     if (rawError && nextMode !== 'source') { setError('Fix the frontmatter before switching modes.'); return }
-    if (page && nextMode === 'source' && mode !== 'source') setRawText(documentSource(page))
+    const inset = () => (headerRef.current?.offsetHeight ?? 65) + (toolbarRef.current?.offsetHeight ?? 60) + 16
+    const position = capturePosition(contentRef.current, mode === 'source' ? sourceRef.current : null, rawText, page.source, inset())
+    const nextRaw = nextMode === 'source' ? documentSource(page) : rawText
+    if (nextMode === 'source') setRawText(nextRaw)
+    cancelAnimationFrame(switchFrame.current)
     setMode(nextMode)
+    switchFrame.current = requestAnimationFrame(() => { switchFrame.current = requestAnimationFrame(() => restorePosition(position, contentRef.current, nextMode === 'source' ? sourceRef.current : null, nextRaw, page.source, inset())) })
   }
   function editRaw(raw: string) {
     setRawText(raw); setRawDirty(true)
@@ -144,17 +156,17 @@ export function BuilderWorkspace({ initialProducts }: { initialProducts: Product
       <div className="studio-sidebar-footer"><button disabled={!selected || busy} onClick={() => { setProductDraft(product?.config ?? initialConfig()); setError(''); setNewProductSlug(''); setCreatingProduct(false); setProductSettings(true) }}><Settings2 size={16} /> Product settings</button><button disabled={busy} onClick={() => { if (!leave()) return; setProductDraft({ ...initialConfig(), name: '' }); setError(''); setNewProductSlug(''); setCreatingProduct(true); setProductSettings(true) }}><Plus size={16} /> Add product</button><button className="studio-new" disabled={!selected || busy} onClick={() => newPage()}><Plus size={17} /> New page</button><a href={selected ? `/docs/${selected}` : '/'}><BookOpen size={14} /> Open documentation <ChevronRight size={13} /></a></div>
     </aside>
     <section className="studio-main">
-      <header className="studio-header"><button className="studio-icon mobile-only" aria-label="Open navigation" onClick={() => setMobileNav(true)}><Menu size={18} /></button><div className="studio-breadcrumb"><span>{product?.config.name ?? 'Workspace'}</span><ChevronRight size={13} /><strong>{page?.title || 'Documentation'}</strong></div><div className="studio-actions"><span className="studio-save-state" role="status"><i className={dirty ? 'unsaved' : ''} />{busy ? 'Working…' : dirty ? 'Unsaved' : 'Saved'}</span>{page && <><button className="studio-icon" aria-label="Export MDX" title="Export MDX" onClick={exportPage}><Download size={17} /></button><button className="studio-save" disabled={busy || !!rawError || !!parsed.error || (!dirty && !page.isNew)} onClick={() => void save()}><Save size={15} /> Save page</button><button className="studio-icon" aria-label="Page settings" onClick={() => setSettings(true)}><MoreHorizontal size={20} /></button></>}</div></header>
+      <header ref={headerRef} className="studio-header"><button className="studio-icon mobile-only" aria-label="Open navigation" onClick={() => setMobileNav(true)}><Menu size={18} /></button><div className="studio-breadcrumb"><span>{product?.config.name ?? 'Workspace'}</span><ChevronRight size={13} /><strong>{page?.title || 'Documentation'}</strong></div><div className="studio-actions"><span className="studio-save-state" role="status"><i className={dirty ? 'unsaved' : ''} />{busy ? 'Working…' : dirty ? 'Unsaved' : 'Saved'}</span>{page && <><button className="studio-icon" aria-label="Export MDX" title="Export MDX" onClick={exportPage}><Download size={17} /></button><button className="studio-save" disabled={busy || !!rawError || !!parsed.error || (!dirty && !page.isNew)} onClick={() => void save()}><Save size={15} /> Save page</button><button className="studio-icon" aria-label="Page settings" onClick={() => setSettings(true)}><MoreHorizontal size={20} /></button></>}</div></header>
       {error && <div className="studio-error" role="alert">{error}<button aria-label="Dismiss error" onClick={() => setError('')}><X size={16} /></button></div>}
       {page ? <>
-        <div className="studio-toolbar"><div className="studio-modes" aria-label="Editor mode">{([['visual', Pencil, 'Visual'], ['source', Code2, 'Source'], ['preview', Eye, 'Preview']] as const).map(([value, Icon, label]) => <button key={value} aria-pressed={mode === value} onClick={() => switchMode(value)}><Icon size={14} />{label}</button>)}</div><div className="studio-tools"><button className="studio-icon" disabled={!past.length || busy} aria-label="Undo" onClick={undo}><Undo2 size={16} /></button><button className="studio-icon" disabled={!future.length || busy} aria-label="Redo" onClick={redo}><Redo2 size={16} /></button><span /><ComponentMenu disabled={busy || mode !== 'visual'} label="Insert component" onInsert={add} /></div></div>
+        <div ref={toolbarRef} className="studio-toolbar"><div className="studio-modes" aria-label="Editor mode">{([['visual', Pencil, 'Visual'], ['source', Code2, 'Source'], ['preview', Eye, 'Preview']] as const).map(([value, Icon, label]) => <button key={value} aria-pressed={mode === value} onClick={() => switchMode(value)}><Icon size={14} />{label}</button>)}</div><div className="studio-tools"><button className="studio-icon" disabled={!past.length || busy} aria-label="Undo" onClick={undo}><Undo2 size={16} /></button><button className="studio-icon" disabled={!future.length || busy} aria-label="Redo" onClick={redo}><Redo2 size={16} /></button><span /><ComponentMenu disabled={busy || mode !== 'visual'} label="Insert component" onInsert={add} /></div></div>
         {recovery && <div className="studio-recovery">A local recovery copy is available.<button onClick={() => { change({ ...recovery, revision: original?.revision }); setRawText(recovery.rawSource ?? serializeDocument(recovery)); setMode('source'); setRawDirty(true); try { parseDocument(recovery.rawSource ?? serializeDocument(recovery)); setRawError('') } catch (e) { setRawError((e as Error).message) } setRecovery(null) }}>Restore copy</button><button onClick={() => { setRecovery(null); try { localStorage.removeItem(draftKey) } catch {} }}>Dismiss</button></div>}
-        <div className={`studio-content ${mode === 'source' ? 'studio-raw-content' : ''}`}>
+        <div ref={contentRef} className={`studio-content ${mode === 'source' ? 'studio-raw-content' : ''}`}>
           {mode === 'source' ? <div className="studio-raw-editor"><div className="studio-source-label"><Code2 size={14} />{page.slug}.mdx<span>Raw MDX</span><button onClick={() => { try { const doc = parseDocument(rawText); editRaw(serializeDocument({ ...doc, source: tidyBlockSpacing(doc.source) })) } catch (e) { setRawError((e as Error).message) } }}>Tidy block spacing</button></div><textarea ref={sourceRef} aria-label="Raw MDX source" spellCheck={false} className="studio-source" value={rawText} disabled={busy} onChange={e => editRaw(e.target.value)} />{(rawError || parsed.error) && <p role="alert" className="studio-error">{rawError || parsed.error}</p>}</div> : <article className="studio-paper">
             <div className="studio-page-kicker"><FileText size={22} /><span>{page.draft ? 'DRAFT PAGE' : 'DOCUMENTATION'}</span></div>
             <input className="studio-title" aria-label="Page title" placeholder="Untitled page" value={page.title} readOnly={mode === 'preview' || busy} onChange={e => change({ title: e.target.value })} />
             <textarea className="studio-description" aria-label="Page description" placeholder="Add a description to set the scene…" value={page.description} readOnly={mode === 'preview' || busy} onChange={e => change({ description: e.target.value })} rows={2} />
-            {mode === 'preview' ? <MdxPreview source={page.source} product={product} /> : <VisualCanvas pages={pages} key={`${selected}:${original?.slug}`} source={page.source} product={product} disabled={busy} onChange={source => change({ source })} />}
+            {mode === 'preview' ? <div className="studio-preview-blocks">{parsed.blocks.map(block => <div key={block.start} data-editor-offset={block.start}><MdxPreview source={page.source} nodes={[block.node]} product={product} /></div>)}</div> : <VisualCanvas pages={pages} key={`${selected}:${original?.slug}`} source={page.source} product={product} disabled={busy} onChange={source => change({ source })} />}
           </article>}
         </div><footer className="studio-status"><span>{status}</span><span>{page.source.trim() ? page.source.trim().split(/\s+/).length : 0} words <b>·</b> {page.slug}.mdx <b>·</b> Ctrl / ⌘ S to save</span></footer>
       </> : <div className="studio-empty"><span className="studio-mark"><Sparkles size={28} /></span><p className="studio-eyebrow">A HOME FOR YOUR IDEAS</p><h1>Something great<br />starts with a page.</h1><p>Choose a page from the sidebar, or give<br />your next idea a place to grow.</p><button className="studio-save" disabled={!selected || busy} onClick={() => newPage()}><Plus size={16} /> Create a page</button><div className="studio-empty-cards">{['Write naturally', 'Compose with components', 'Keep your MDX'].map((title, i) => <div key={title}>{i === 0 ? <Pencil /> : i === 1 ? <LayoutTemplate /> : <Code2 />}<strong>{title}</strong><p>{['A focused canvas for your documentation.', 'Callouts, cards, tabs, steps, and more.', 'Switch to source whenever you need.'][i]}</p></div>)}</div></div>}

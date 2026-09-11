@@ -1,5 +1,6 @@
 'use client'
 
+import { TooltipContent } from './tooltip-content'
 import { Popover } from '@base-ui/react/popover'
 import { iconLabel } from '@/lib/icon-catalog'
 import { ProductIcon } from '@/components/docs/icons'
@@ -44,7 +45,7 @@ export function Frame({ caption, children }: Content & { caption?: ReactNode }) 
 export function Badge({ children }: Content) { return <span className="mdx-badge">{children}</span> }
 /** A hover explanation that also opens by keyboard or tap. A popover permits CTA links. */
 export function Tooltip({ children, tip = "", headline, cta, href, triggerHref }: Content & { tip?: string; headline?: string; cta?: string; href?: string; triggerHref?: string }) {
-  return <Popover.Root><Popover.Trigger render={safeUrl(triggerHref) ? <a href={safeUrl(triggerHref)} /> : undefined} nativeButton={!safeUrl(triggerHref)} onClick={event => { if (safeUrl(triggerHref)) event.preventBaseUIHandler() }} openOnHover delay={150} closeDelay={150} className={`mdx-tooltip-trigger${safeUrl(triggerHref) ? " mdx-icon-link" : ""}`}>{children}</Popover.Trigger><Popover.Portal><Popover.Positioner side="top" sideOffset={8} className="mdx-tooltip-positioner"><Popover.Popup className="mdx-tooltip-popup" initialFocus={false} aria-label={headline || 'More information'}>{headline && <Popover.Title className="mdx-tooltip-heading">{headline}</Popover.Title>}<Popover.Description className="mdx-tooltip-description">{tip}</Popover.Description>{cta && safeUrl(href) && <a className="mdx-tooltip-cta" href={safeUrl(href)}>{cta} ↗</a>}</Popover.Popup></Popover.Positioner></Popover.Portal></Popover.Root>
+  return <Popover.Root><Popover.Trigger render={safeUrl(triggerHref) ? <a href={safeUrl(triggerHref)} /> : undefined} nativeButton={!safeUrl(triggerHref)} onClick={event => { if (safeUrl(triggerHref)) event.preventBaseUIHandler() }} openOnHover delay={150} closeDelay={150} className={`mdx-tooltip-trigger${safeUrl(triggerHref) ? " mdx-icon-link" : ""}`}>{children}</Popover.Trigger><Popover.Portal><Popover.Positioner side="top" sideOffset={8} className="mdx-tooltip-positioner"><Popover.Popup className="mdx-tooltip-popup" initialFocus={false} aria-label={headline || 'More information'}>{headline && <Popover.Title className="mdx-tooltip-heading">{headline}</Popover.Title>}<Popover.Description render={<div />} className="mdx-tooltip-description"><TooltipContent source={tip} components={mdxComponents} safeUrl={safeUrl} /></Popover.Description>{cta && safeUrl(href) && <a className="mdx-tooltip-cta" href={safeUrl(href)}>{cta} ↗</a>}</Popover.Popup></Popover.Positioner></Popover.Portal></Popover.Root>
 }
 export function Emoji({ icon = 'face-smile', label, tip, headline, cta, href }: Content & { icon?: string; label?: string; tip?: string; headline?: string; cta?: string; href?: string }) {
   const link = safeUrl(href)

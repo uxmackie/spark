@@ -19,3 +19,5 @@
 .studio-use-icon{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin:8px 0;font-size:12px}.studio-icon-grid{max-height:300px;overflow:auto}
 
 .studio-icon-tooltip-field{display:grid;gap:5px;margin:10px 0;font-size:12px}.studio-icon-tooltip-field input{border:1px solid var(--border);border-radius:6px;padding:8px;background:var(--background);color:var(--foreground)}
+
+.studio-icon-tooltip-field textarea,.studio-tooltip-form textarea{border:1px solid var(--border);border-radius:6px;padding:8px;background:var(--background);color:var(--foreground);resize:vertical;min-height:80px;width:100%}

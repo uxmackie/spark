@@ -127,9 +127,20 @@ export async function deleteProduct(value: unknown) {
     const input = z.object({ slug: slugSchema, confirmation: z.string() }).parse(value)
     if (input.confirmation !== input.slug) throw new Error('Type the product path to confirm deletion.')
     const directory = await contentPath(input.slug)
-    const config = await contentPath(input.slug, 'config.json')
-    if (await readOptional(config) === null) throw new Error('Product not found')
-    await rm(directory, { recursive: true })
+    try {
+      if (!(await lstat(directory)).isDirectory()) throw new Error('Product not found')
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code === 'ENOENT') throw new Error('Product not found')
+      throw error
+    }
+    try { await rm(directory, { recursive: true, maxRetries: 5, retryDelay: 200 }) }
+    catch (error) {
+      const code = (error as NodeJS.ErrnoException).code
+      if (code === 'EPERM' || code === 'EACCES' || code === 'EBUSY' || code === 'ENOTEMPTY') {
+        throw new Error('The product folder could not be fully deleted. Close programs using its files, check folder permissions, then try again.')
+      }
+      throw error
+    }
     return { slug: input.slug }
   })
 }

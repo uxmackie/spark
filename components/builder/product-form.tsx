@@ -15,10 +15,11 @@ type Props = {
   busy: boolean
   onSave: () => void
   onDelete: (confirmation: string) => void
+  deleteError?: string
 }
 const makeSlug = (name: string) => name.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 
-export function ProductForm({ config, onChange, creating, slug, onSlugChange, busy, onSave, onDelete }: Props) {
+export function ProductForm({ config, onChange, creating, slug, onSlugChange, busy, onSave, onDelete, deleteError }: Props) {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [confirmation, setConfirmation] = useState('')
   const [customSlug, setCustomSlug] = useState(false)
@@ -53,7 +54,8 @@ export function ProductForm({ config, onChange, creating, slug, onSlugChange, bu
         <p>Permanently delete this product and all files in its content folder, including pages and configuration. Unsaved edits will be discarded. This cannot be undone.</p>
         {confirmDelete ? <div>
           <label>Type <code>{slug}</code> to confirm<input aria-label="Confirm product path" autoComplete="off" spellCheck={false} value={confirmation} onChange={event => setConfirmation(event.target.value)} /></label>
-          <div className="studio-delete-actions"><button type="button" onClick={() => { setConfirmDelete(false); setConfirmation('') }}>Cancel</button><button type="button" disabled={busy || confirmation !== slug} onClick={() => onDelete(confirmation)}>Delete permanently</button></div>
+          <div className="studio-delete-actions"><button type="button" onClick={() => { setConfirmDelete(false); setConfirmation('') }}>Cancel</button><button type="button" disabled={busy || confirmation.trim() !== slug} onClick={() => onDelete(confirmation.trim())}>{busy ? 'Deleting…' : 'Delete permanently'}</button></div>
+          {deleteError && <p role="alert" className="studio-error">{deleteError}</p>}
         </div> : <button type="button" onClick={() => setConfirmDelete(true)}>Delete product…</button>}
       </section>}
     </fieldset>

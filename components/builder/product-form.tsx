@@ -14,10 +14,13 @@ type Props = {
   onSlugChange: (slug: string) => void
   busy: boolean
   onSave: () => void
+  onDelete: (confirmation: string) => void
 }
 const makeSlug = (name: string) => name.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 
-export function ProductForm({ config, onChange, creating, slug, onSlugChange, busy, onSave }: Props) {
+export function ProductForm({ config, onChange, creating, slug, onSlugChange, busy, onSave, onDelete }: Props) {
+  const [confirmDelete, setConfirmDelete] = useState(false)
+  const [confirmation, setConfirmation] = useState('')
   const [customSlug, setCustomSlug] = useState(false)
   const message = getInspiration(config)
   const setMessage = (patch: Partial<typeof message>) => onChange({ ...config, inspiration: { ...message, ...patch } })
@@ -45,6 +48,14 @@ export function ProductForm({ config, onChange, creating, slug, onSlugChange, bu
         <div className="studio-form-row"><label>Version<input required maxLength={30} placeholder="v1.0" value={config.version} onChange={event => onChange({ ...config, version: event.target.value })} /></label><label>Brand name<input required maxLength={40} placeholder="spark" value={config.theme.branding} onChange={event => setTheme({ branding: event.target.value })} /></label></div>
       </div></details>
       <div className="studio-product-submit"><button type="submit" className="studio-save">{creating ? <Sparkles size={15} /> : <Save size={15} />}{busy ? 'Saving…' : creating ? 'Create product' : 'Save changes'}</button></div>
+      {!creating && <section className="studio-delete-product" aria-label="Delete product">
+        <strong>Delete product</strong>
+        <p>Permanently delete this product and all files in its content folder, including pages and configuration. Unsaved edits will be discarded. This cannot be undone.</p>
+        {confirmDelete ? <div>
+          <label>Type <code>{slug}</code> to confirm<input aria-label="Confirm product path" autoComplete="off" spellCheck={false} value={confirmation} onChange={event => setConfirmation(event.target.value)} /></label>
+          <div className="studio-delete-actions"><button type="button" onClick={() => { setConfirmDelete(false); setConfirmation('') }}>Cancel</button><button type="button" disabled={busy || confirmation !== slug} onClick={() => onDelete(confirmation)}>Delete permanently</button></div>
+        </div> : <button type="button" onClick={() => setConfirmDelete(true)}>Delete product…</button>}
+      </section>}
     </fieldset>
   </form>
 }

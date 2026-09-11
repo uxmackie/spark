@@ -52,6 +52,7 @@ export async function saveProduct(input: { originalSlug?: string; slug: string; 
     if (input.originalSlug && input.originalSlug !== slug) throw new Error('Product folder renaming is not supported in the editor')
     const config = productConfigSchema.parse(input.config)
     const file = await contentPath(slug, 'config.json')
+    if (!input.create && await readOptional(file) === null) throw new Error('Product no longer exists. Reload before saving.')
     if (input.create && await readOptional(file) !== null) throw new Error('A product with that path already exists')
     await atomicWrite(file, `${JSON.stringify(config, null, 2)}\n`)
     return { slug, config }
@@ -85,7 +86,8 @@ export async function savePage(value: unknown) {
     const output = documentSource({ ...input, frontmatter: input.frontmatter ?? metadata })
     const configPath = await contentPath(input.product, 'config.json')
     const configRaw = await readOptional(configPath)
-    const config = configRaw ? JSON.parse(configRaw) : null
+    if (configRaw === null) throw new Error('Product no longer exists. Reload before saving.')
+    const config = JSON.parse(configRaw)
     await atomicWrite(target, output)
     if (config) {
       if (config.navigationTree) {
@@ -117,5 +119,17 @@ export async function saveNavigation(input: { product: string; tree: unknown; ex
     if (JSON.stringify(config.navigationTree ?? null) !== JSON.stringify(input.expectedTree ?? null)) throw new Error('Navigation changed on disk. Reload the product before saving your navigation.')
     await atomicWrite(file, JSON.stringify({ ...config, navigationTree: tree }, null, 2) + '\n')
     return { tree }
+  })
+}
+
+export async function deleteProduct(value: unknown) {
+  return exclusive(async () => {
+    const input = z.object({ slug: slugSchema, confirmation: z.string() }).parse(value)
+    if (input.confirmation !== input.slug) throw new Error('Type the product path to confirm deletion.')
+    const directory = await contentPath(input.slug)
+    const config = await contentPath(input.slug, 'config.json')
+    if (await readOptional(config) === null) throw new Error('Product not found')
+    await rm(directory, { recursive: true })
+    return { slug: input.slug }
   })
 }

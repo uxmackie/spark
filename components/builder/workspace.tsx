@@ -21,8 +21,8 @@ import { renameNavigationPage, type NavigationNode } from '@/lib/navigation'
 type Page = { slug: string; title: string; description: string; source: string; draft: boolean; fileName?: string; revision?: string; isNew?: boolean; frontmatter?: Record<string, unknown>; rawSource?: string; navigationParent?: string | null }
 const snapshot = (page: Page | null) => JSON.stringify(page)
 const initialConfig = (): ProductConfig => ({ name: 'New product', description: '', motto: '', version: 'v1.0', icon: 'book', theme: { accent: '#f0ac73', font: 'Inter', branding: 'spark' }, navigation: [] })
-async function api(url: string, body?: unknown) {
-  const response = await fetch(url, body === undefined ? undefined : { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })
+async function api(url: string, body?: unknown, method = 'POST') {
+  const response = await fetch(url, body === undefined ? undefined : { method, headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) })
   const data = await response.json()
   if (!response.ok) throw new Error(data.error ?? 'Request failed')
   return data
@@ -141,6 +141,27 @@ export function BuilderWorkspace({ initialProducts }: { initialProducts: Product
     const text = mode === 'source' ? rawText : documentSource(page)
     const url = URL.createObjectURL(new Blob([text], { type: 'text/markdown' })); const a = document.createElement('a'); a.href = url; a.download = `${page.slug.replaceAll('/', '-')}.mdx`; a.click(); URL.revokeObjectURL(url)
   }
+  async function removeProduct(confirmation: string) {
+    if (busy || !product || creatingProduct) return
+    const slug = selected
+    setBusy(true); setError('')
+    try {
+      await api('/api/builder/products', { slug, confirmation }, 'DELETE')
+      ++loadId.current
+      cancelAnimationFrame(switchFrame.current)
+      const remaining = products.filter(item => item.slug !== slug)
+      setProducts(remaining); setProductSettings(false); setSelected(''); setPages([])
+      setPage(null); setOriginal(null); setSaved('null'); setRecovery(null)
+      setPast([]); setFuture([]); setRawText(''); setRawDirty(false); setRawError('')
+      try {
+        const prefix = `spark:local-draft:${slug}:`
+        for (const key of Object.keys(localStorage)) if (key.startsWith(prefix)) localStorage.removeItem(key)
+      } catch { /* Storage is optional. */ }
+      if (remaining[0]) await loadProduct(remaining[0].slug)
+      else setStatus('Product deleted. Create a product to get started.')
+    } catch (e) { setError((e as Error).message) }
+    finally { setBusy(false) }
+  }
   async function saveConfig() {
     setBusy(true); setError('')
     try { const result = await api('/api/builder/products', { originalSlug: creatingProduct ? undefined : selected, slug: creatingProduct ? newProductSlug : selected, config: productDraft, create: creatingProduct }); setProducts(p => p.some(item => item.slug === result.slug) ? p.map(item => item.slug === result.slug ? result : item) : [...p, result]); setProductSettings(false); if (creatingProduct) await loadProduct(result.slug); setStatus('Product saved') } catch (e) { setError((e as Error).message) } finally { setBusy(false) }
@@ -174,6 +195,6 @@ export function BuilderWorkspace({ initialProducts }: { initialProducts: Product
       </> : <div className="studio-empty"><span className="studio-mark"><Sparkles size={28} /></span><p className="studio-eyebrow">A HOME FOR YOUR IDEAS</p><h1>Something great<br />starts with a page.</h1><p>Choose a page from the sidebar, or give<br />your next idea a place to grow.</p><button className="studio-save" disabled={!selected || busy} onClick={() => newPage()}><Plus size={16} /> Create a page</button><div className="studio-empty-cards">{['Write naturally', 'Compose with components', 'Keep your MDX'].map((title, i) => <div key={title}>{i === 0 ? <Pencil /> : i === 1 ? <LayoutTemplate /> : <Code2 />}<strong>{title}</strong><p>{['A focused canvas for your documentation.', 'Callouts, cards, tabs, steps, and more.', 'Switch to source whenever you need.'][i]}</p></div>)}</div></div>}
     </section>
     <Dialog open={settings} onOpenChange={setSettings}><DialogContent className="studio-dialog"><DialogTitle>Page settings</DialogTitle><DialogDescription>The file path also determines this page’s URL.</DialogDescription>{page && <><label>Page path<input value={page.slug} disabled={busy} onChange={e => change({ slug: e.target.value })} /><small>content/{selected}/{page.slug}.mdx</small></label><label className="studio-checkbox"><input type="checkbox" checked={page.draft} disabled={busy} onChange={e => change({ draft: e.target.checked })} />Draft metadata</label><p className="studio-muted">Draft is a metadata label. This project currently includes draft pages in documentation.</p><button className="studio-save" onClick={() => setSettings(false)}><Check size={15} /> Done</button></>}</DialogContent></Dialog>
-    <Dialog open={productSettings} onOpenChange={open => { if (!busy) setProductSettings(open) }}><DialogContent className="studio-dialog sm:max-w-lg"><DialogTitle>{creatingProduct ? 'Create a product' : 'Product settings'}</DialogTitle><DialogDescription>{creatingProduct ? 'Give your next idea a home. You can add pages once it’s created.' : 'Update your product’s details and appearance.'}</DialogDescription>{error && <p role="alert" className="studio-error">{error}</p>}<ProductForm key={`${creatingProduct}:${selected}:${productSettings}`} config={productDraft} onChange={setProductDraft} creating={creatingProduct} slug={creatingProduct ? newProductSlug : selected} onSlugChange={setNewProductSlug} busy={busy} onSave={() => void saveConfig()} /></DialogContent></Dialog>
+    <Dialog open={productSettings} onOpenChange={open => { if (!busy) setProductSettings(open) }}><DialogContent className="studio-dialog sm:max-w-lg"><DialogTitle>{creatingProduct ? 'Create a product' : 'Product settings'}</DialogTitle><DialogDescription>{creatingProduct ? 'Give your next idea a home. You can add pages once it’s created.' : 'Update your product’s details and appearance.'}</DialogDescription>{error && <p role="alert" className="studio-error">{error}</p>}<ProductForm key={`${creatingProduct}:${selected}:${productSettings}`} config={productDraft} onChange={setProductDraft} creating={creatingProduct} slug={creatingProduct ? newProductSlug : selected} onSlugChange={setNewProductSlug} busy={busy} onSave={() => void saveConfig()} onDelete={confirmation => void removeProduct(confirmation)} /></DialogContent></Dialog>
   </main>
 }

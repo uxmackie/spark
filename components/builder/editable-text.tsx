@@ -1,9 +1,13 @@
 'use client'
-import { createElement, useLayoutEffect, useRef } from 'react'
+import { createElement, Fragment, useLayoutEffect, useRef, useState, useId } from 'react'
+import { SlashMenu, slashCommands } from './slash-menu'
 import { domToMarkdown } from '@/lib/rich-text'
 
 // React owns the element; the browser exclusively owns its editable children.
-export function EditableText({ html, label, onChange, onStyle, tag = 'div', plain = false, multiline = true }: { html: string; label: string; onChange: (value: string) => void; onStyle?: (style: string) => void; tag?: string; plain?: boolean; multiline?: boolean }) {
+export function EditableText({ html, label, onChange, onStyle, onCommand, tag = 'div', plain = false, multiline = true }: { html: string; label: string; onCommand?: (source: string) => void; onChange: (value: string) => void; onStyle?: (style: string) => void; tag?: string; plain?: boolean; multiline?: boolean }) {
+  const [slash, setSlash] = useState<{query:string;rect:DOMRect} | null>(null)
+  const [active, setActive] = useState(0)
+  const menuId = useId()
   const ref = useRef<HTMLElement>(null)
   const composing = useRef(false)
   const last = useRef<string | null>(null)
@@ -22,6 +26,18 @@ export function EditableText({ html, label, onChange, onStyle, tag = 'div', plai
     last.current = value
     latest.current.onChange(value)
   }
+  function updateSlash() {
+    const el = ref.current
+    const selection = window.getSelection()
+    const text = el?.textContent ?? ''
+    if (!onCommand || composing.current || !selection?.isCollapsed || !/^\/[a-zA-Z0-9 ]*$/.test(text)) { setSlash(null); return }
+    setSlash({ query: text.slice(1), rect: selection.rangeCount ? selection.getRangeAt(0).getBoundingClientRect() : el!.getBoundingClientRect() }); setActive(0)
+  }
+  function choose(source: string) {
+    setSlash(null)
+    if (ref.current) { ref.current.innerHTML = ''; last.current = ''; ref.current.blur() }
+    onCommand?.(source)
+  }
   function insertText(text: string) {
     const selected = window.getSelection()
     if (!selected?.rangeCount || !ref.current) return
@@ -36,13 +52,26 @@ export function EditableText({ html, label, onChange, onStyle, tag = 'div', plai
     selected.removeAllRanges(); selected.addRange(range)
     commit()
   }
-  return createElement(tag, {
+  const editor = createElement(tag, {
     ref, contentEditable: true, suppressContentEditableWarning: true, role: 'textbox', 'aria-label': label, 'aria-multiline': multiline,
+    'aria-expanded': onCommand ? !!slash : undefined, 'aria-controls': slash ? menuId : undefined, 'aria-activedescendant': slash ? `${menuId}-${active}` : undefined,
     'data-rich-editor': plain ? undefined : 'true', 'data-can-style': onStyle ? 'true' : undefined, className: `studio-editable ${plain ? 'is-plain' : ''}`,
-    onInput: (event: React.FormEvent) => { event.stopPropagation(); commit() }, onBlur: commit,
+    onInput: (event: React.FormEvent) => { event.stopPropagation(); commit(); updateSlash() }, onBlur: () => { commit(); setSlash(null) },
     onCompositionStart: () => { composing.current = true }, onCompositionEnd: () => { composing.current = false; commit() },
-    onKeyDown: (event: React.KeyboardEvent) => { if (event.key === 'Enter' && !event.nativeEvent.isComposing) { event.preventDefault(); event.stopPropagation(); if (multiline) insertText('\n'); else ref.current?.blur() } },
+    onKeyDown: (event: React.KeyboardEvent) => {
+      if (slash && !event.nativeEvent.isComposing) {
+        const items = slashCommands.filter(item => `${item.name} ${item.category}`.toLowerCase().includes(slash.query.toLowerCase()))
+        if (['ArrowDown','ArrowUp','Enter','Escape'].includes(event.key)) {
+          event.preventDefault(); event.stopPropagation()
+          if (event.key === 'Escape') setSlash(null)
+          else if (event.key === 'Enter') { if (items[active]) choose(items[active].source) }
+          else if (items.length) setActive((active + (event.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length)
+          return
+        }
+      }
+      if (event.key === 'Enter' && !event.nativeEvent.isComposing) { event.preventDefault(); event.stopPropagation(); if (multiline) insertText('\n'); else ref.current?.blur() } },
     onPaste: (event: React.ClipboardEvent) => { event.preventDefault(); event.stopPropagation(); insertText(event.clipboardData.getData('text/plain')) },
     onDrop: (event: React.DragEvent) => { if (!event.dataTransfer.types.includes('application/spark-block')) { event.preventDefault(); event.stopPropagation() } },
   })
+  return createElement(Fragment, null, editor, slash ? createElement(SlashMenu, { id: menuId, query: slash.query, active, rect: slash.rect, onHover: setActive, onChoose: choose }) : null)
 }

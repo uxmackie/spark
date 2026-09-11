@@ -18,9 +18,9 @@ export function MdxPreview({ source, nodes, product, interactiveLinks = true, on
   function render(node: MdxNode, key: number): ReactNode {
     if (onEdit && (node.type === 'paragraph' || node.type === 'heading')) {
       const prefix = node.type === 'heading' ? '#'.repeat(node.depth ?? 2) + ' ' : ''
-      return <EditableText key={key} tag={node.type === 'heading' ? `h${node.depth}` : 'p'} label={node.type === 'heading' ? 'Heading' : 'Paragraph'} html={inlineHtml(node.children ?? [], source ?? '')} onChange={value => onEdit(node, prefix + (value || '{/* spark-empty */}'))} onStyle={style => { const body = (source ?? '').slice(node.position!.start.offset, node.position!.end.offset).replace(/^#{1,6} /, ''); onEdit(node, style === 'paragraph' ? body : /^h[1-3]$/.test(style) ? '#'.repeat(Number(style[1])) + ' ' + body : (style === 'ol' ? '1. ' : '- ') + body) }} />
+      return <EditableText key={key} onCommand={value => onEdit(node, value)} tag={node.type === 'heading' ? `h${node.depth}` : 'p'} label={node.type === 'heading' ? 'Heading' : 'Paragraph'} html={inlineHtml(node.children ?? [], source ?? '')} onChange={value => onEdit(node, prefix + (value || '{/* spark-empty */}'))} onStyle={style => { const body = (source ?? '').slice(node.position!.start.offset, node.position!.end.offset).replace(/^#{1,6} /, ''); onEdit(node, style === 'paragraph' ? body : /^h[1-3]$/.test(style) ? '#'.repeat(Number(style[1])) + ' ' + body : (style === 'ol' ? '1. ' : '- ') + body) }} />
     }
-    if (onEdit && node.type === 'mdxFlowExpression' && node.value?.trim() === '/* spark-empty */') return <EditableText key={key} tag="p" label="Paragraph" html="" onChange={value => onEdit(node, value || '{/* spark-empty */}')} />
+    if (onEdit && node.type === 'mdxFlowExpression' && node.value?.trim() === '/* spark-empty */') return <EditableText key={key} onCommand={value => onEdit(node, value)} tag="p" label="Paragraph" html="" onChange={value => onEdit(node, value || '{/* spark-empty */}')} />
     const children = node.children?.map(render)
     const props: Record<string, unknown> = { key }
     if (node.type === 'mdxFlowExpression' && node.value?.trim() === '/* spark-empty */') return <p key={key} className="studio-muted">Empty paragraph</p>

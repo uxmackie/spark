@@ -30,15 +30,15 @@
 .studio .studio-raw-editor{max-width:740px}
 .studio-raw-editor .studio-source-label{border:0;border-radius:0;background:transparent;padding:0 0 24px;font-size:11px;color:var(--muted-foreground)}
 .studio-raw-editor .studio-source-label button{font-size:11px;opacity:.65}
-.studio-code-surface{position:relative;min-height:calc(100vh - 300px)}
-.studio .studio-code-highlight,.studio .studio-code-input{box-sizing:border-box;display:block;width:100%;margin:0;padding:0;border:0;border-radius:0;background:transparent;font-family:'Paper Mono',ui-monospace,SFMono-Regular,Consolas,monospace!important;font-size:13px!important;font-weight:400;line-height:22px;letter-spacing:0;tab-size:2;white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal;font-variant-ligatures:none;text-align:left;text-indent:0}
+.studio-code-surface{position:relative;overflow:hidden;min-height:calc(100vh - 300px)}
+.studio .studio-code-highlight,.studio .studio-code-input{box-sizing:border-box;display:block;width:100%;margin:0;padding:0;border:0;border-radius:0;background:transparent;font-family:'Paper Mono',ui-monospace,SFMono-Regular,Consolas,monospace!important;font-size:13px!important;font-weight:400;line-height:22px;letter-spacing:0;tab-size:2;white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal;font-style:normal;font-variant-ligatures:none;text-align:left;text-indent:0}
 .studio .studio-code-highlight{pointer-events:none;min-height:inherit;color:var(--foreground);padding-bottom:22px}
-.studio-code-line{display:block;min-height:22px}
+.studio-code-line{display:inline}
 .studio .studio-code-input{position:absolute;inset:0;height:100%;resize:none;overflow:hidden;color:transparent!important;-webkit-text-fill-color:transparent;caret-color:var(--foreground);outline:none;box-shadow:none}
 .studio-code-input::selection{background:rgba(160,160,160,.3)}
 .studio-code-highlight .source-tag{color:#22863a}.studio-code-highlight .source-string{color:#0869a6}.studio-code-highlight .source-key{color:#8250af}.studio-code-highlight .source-muted{color:#78818a}
 .dark .studio-code-highlight .source-tag{color:#85ed89}.dark .studio-code-highlight .source-string{color:#9cdaff}.dark .studio-code-highlight .source-key{color:#c3b4ff}
-@media(max-width:700px){.studio .studio-raw-content{padding:28px 22px 70px}.studio .studio-code-highlight,.studio .studio-code-input{font-size:12px!important;line-height:21px}.studio-code-line{min-height:21px}}
+@media(max-width:700px){.studio .studio-raw-content{padding:28px 22px 70px}.studio .studio-code-highlight,.studio .studio-code-input{font-size:12px!important;line-height:21px}}
 @media(forced-colors:active){.studio .studio-code-input{color:CanvasText!important;-webkit-text-fill-color:CanvasText}.studio-code-highlight{visibility:hidden}}
 /* Synthetic emphasis retains the regular monospace advance widths for caret alignment. */
 .studio-code-highlight .source-heading{color:#d92d20;font-weight:600}

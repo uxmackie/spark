@@ -8,12 +8,16 @@ export function SourceEditor({ value, onChange, disabled, inputRef }: {
   inputRef: RefObject<HTMLTextAreaElement | null>
 }) {
   const lines = useMemo(() => {
-    let offset = 0
-    return value.split('\n').map(text => {
-      const line = { start: offset, end: offset + text.length, tokens: highlightSource(text) }
-      offset += text.length + 1
-      return line
-    })
+    const result: { start: number; end: number; tokens: { text: string; kind: string }[] }[] = [{ start: 0, end: 0, tokens: [] }]
+    for (const token of highlightSource(value)) {
+      token.text.split('\n').forEach((text, index) => {
+        if (index) { const start = result[result.length - 1].end + 1; result.push({ start, end: start, tokens: [] }) }
+        const line = result[result.length - 1]
+        if (text) line.tokens.push({ text, kind: token.kind })
+        line.end += text.length
+      })
+    }
+    return result
   }, [value])
   return <div className="studio-code-surface">
     <pre className="studio-code-highlight" aria-hidden="true">{lines.map(line => <span className="studio-code-line" key={line.start} data-source-start={line.start} data-source-end={line.end}>{line.tokens.map((token, i) => <span key={i} className={token.kind ? `source-${token.kind}` : undefined}>{token.text}</span>)}{'\n'}</span>)}</pre>

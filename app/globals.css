@@ -141,3 +141,18 @@
 .doc-prose a:not(.doc-card):not(.doc-heading-anchor):not(.mdx-card):not(.mdx-icon-link),.mdx-tooltip-content a,.mdx-tooltip-cta{background-image:linear-gradient(currentColor,currentColor);background-repeat:no-repeat;background-position:0 100%;background-size:0% 1px;transition:background-size 160ms ease-out;text-decoration:none;box-decoration-break:clone;-webkit-box-decoration-break:clone}
 @media(hover:hover){.doc-prose a:not(.doc-card):not(.doc-heading-anchor):not(.mdx-card):not(.mdx-icon-link):hover,.mdx-tooltip-content a:hover,.mdx-tooltip-cta:hover{background-size:100% 1px}}
 .docs-search-filter{display:flex;align-items:center;gap:12px;font-size:12px;color:var(--muted-foreground)}.docs-search-filter select{min-width:0;flex:1;padding:8px 10px;border:1px solid var(--border);border-radius:7px;background:var(--background);color:var(--foreground)}.docs-search-highlight{background:color-mix(in srgb,var(--primary) 20%,transparent);color:var(--foreground);border-radius:3px;padding:0 1px}
+
+/* Shared custom selects, including portalled menus inside dialogs. */
+.spark-select-trigger{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-width:0;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--foreground);padding:9px 11px;font:inherit;letter-spacing:normal;text-align:left;cursor:pointer;transition:background 120ms,border-color 120ms}
+.spark-select-trigger>span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.spark-select-trigger:hover{background:var(--muted)}
+.spark-select-trigger:focus-visible{outline:2px solid var(--foreground);outline-offset:3px}
+.spark-select-trigger[data-disabled]{opacity:.4;cursor:not-allowed}
+.spark-select-positioner{z-index:200;outline:none}
+.spark-select-popup{min-width:var(--anchor-width);max-width:calc(100vw - 24px);max-height:min(320px,var(--available-height));overflow:auto;border:1px solid var(--border);border-radius:10px;padding:5px;background:var(--popover);color:var(--popover-foreground);box-shadow:0 12px 36px #0003;outline:none;font-size:13px;opacity:1;transition:opacity 120ms}
+.spark-select-popup[data-starting-style],.spark-select-popup[data-ending-style]{opacity:0}
+.spark-select-item{display:flex;align-items:center;justify-content:space-between;gap:22px;padding:8px 10px;border-radius:6px;cursor:default;outline:none;user-select:none}
+.spark-select-item[data-highlighted]{background:var(--muted)}
+.spark-select-item[data-selected]{font-weight:600}
+.spark-select-studio{--border:#303030;--card:#202020;--muted:#2b2b2b;--foreground:#ededed;--popover:#191919;--popover-foreground:#ededed;color-scheme:dark}
+@media(prefers-reduced-motion:reduce){.spark-select-trigger,.spark-select-popup{transition:none}}

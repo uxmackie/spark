@@ -8,6 +8,7 @@ import { componentCatalog, moveBlock, parseMdx, replaceBlock, type SourceBlock }
 import type { Product, ProductConfig } from '@/lib/product-config'
 import { MdxPreview } from './mdx-preview'
 import './studio.css'
+import { StyledSelect } from '@/components/ui/select'
 import { SourceEditor } from './source-editor'
 import { ProductForm } from './product-form'
 import { VisualCanvas } from './visual-canvas'
@@ -152,7 +153,7 @@ export function BuilderWorkspace({ initialProducts }: { initialProducts: Product
   return <main className="studio">
     <aside className={`studio-sidebar ${mobileNav ? 'is-open' : ''}`}>
       <div className="studio-brand"><span className="studio-mark"><Sparkles size={19} /></span><strong>spark<span>studio</span></strong><button className="studio-icon mobile-only" aria-label="Close navigation" onClick={() => setMobileNav(false)}><X size={18} /></button></div>
-      <label className="studio-product-label">WORKSPACE<select aria-label="Product" value={selected} disabled={busy} onChange={e => { if (leave()) void loadProduct(e.target.value) }}>{products.map(p => <option key={p.slug} value={p.slug}>{p.config.name}</option>)}</select></label>
+      <label className="studio-product-label">WORKSPACE<StyledSelect label="Product" studio value={selected} disabled={busy} onValueChange={value => { if (leave()) void loadProduct(value) }} options={products.map(p => ({ value: p.slug, label: p.config.name }))} /></label>
       {product && <NavigationEditor key={selected} config={product.config} pages={pages} activeSlug={original?.slug} busy={busy} onChange={saveTree} onOpen={slug => { const next = pages.find(p => p.slug === slug); if (next && leave()) openPage(next) }} onNewPage={parent => newPage(parent)} onNewProduct={() => { if (!leave()) return; setProductDraft({ ...initialConfig(), name: '' }); setNewProductSlug(''); setCreatingProduct(true); setProductSettings(true) }} />}
       <div className="studio-sidebar-footer"><button disabled={!selected || busy} onClick={() => { setProductDraft(product?.config ?? initialConfig()); setError(''); setNewProductSlug(''); setCreatingProduct(false); setProductSettings(true) }}><Settings2 size={16} /> Product settings</button><button disabled={busy} onClick={() => { if (!leave()) return; setProductDraft({ ...initialConfig(), name: '' }); setError(''); setNewProductSlug(''); setCreatingProduct(true); setProductSettings(true) }}><Plus size={16} /> Add product</button><button className="studio-new" disabled={!selected || busy} onClick={() => newPage()}><Plus size={17} /> New page</button><a href={selected ? `/docs/${selected}` : '/'}><BookOpen size={14} /> Open documentation <ChevronRight size={13} /></a></div>
     </aside>

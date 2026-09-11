@@ -1,5 +1,6 @@
 'use client'
 
+import { StyledSelect } from '@/components/ui/select'
 import { useState } from 'react'
 import { IconPicker } from './icon-picker'
 import { Save, Sparkles } from '@/components/icons/font-awesome'
@@ -29,7 +30,7 @@ export function ProductForm({ config, onChange, creating, slug, onSlugChange, bu
       <div className="studio-form-section"><span>Make it yours</span><p>A few small details to give your product its own feel.</p></div>
       <div className="studio-form-row">
         <label>Accent color<div className="studio-color-field"><input type="color" aria-label="Choose accent color" value={/^#[0-9a-f]{6}$/i.test(config.theme.accent) ? config.theme.accent : '#f0ac73'} onChange={event => setTheme({ accent: event.target.value })} /><input aria-label="Accent hex color" required pattern="#[0-9a-fA-F]{6}" title="Enter a six-digit hex color, such as #f0ac73." maxLength={7} value={config.theme.accent} onChange={event => setTheme({ accent: event.target.value })} /></div></label>
-        <label>Font<select value={config.theme.font} onChange={event => setTheme({ font: event.target.value as ProductConfig['theme']['font'] })}>{['Inter', 'Arial', 'Georgia'].map(font => <option key={font}>{font}</option>)}</select></label>
+        <label>Font<StyledSelect label="Font" studio disabled={busy} value={config.theme.font} onValueChange={font => setTheme({ font: font as ProductConfig['theme']['font'] })} options={['Inter', 'Arial', 'Georgia'].map(font => ({ value: font, label: font }))} /></label>
       </div>
       <IconPicker value={config.icon} onChange={icon => onChange({ ...config, icon })} />
       <section className="studio-sidebar-message-settings" aria-label="Inspiration message settings">

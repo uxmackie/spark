@@ -1,3 +1,4 @@
+import { RelatedPages } from '@/components/docs/related-pages'
 import { literalAttributes } from '@/lib/mdx-literal-attributes'
 import { headingAnchors } from '@/lib/headings'
 import { Heading } from '@/components/docs/heading'
@@ -34,7 +35,7 @@ export async function Document({ productSlug, segments }: { productSlug: string;
       <main id="main-content" className="page-enter w-full min-w-0 max-w-[760px]" key={`${productSlug}/${slug}`}>
         <div className="flex items-center justify-between gap-3"><p className="text-sm font-medium text-primary">{section}</p><CopyPage source={document.source} /></div>
         <div className="flex flex-col gap-3 pb-7 pt-4"><h1 className="text-balance text-[32px] font-semibold leading-tight tracking-[-1.2px] sm:text-[36px]">{document.title}</h1><p className="text-pretty text-base leading-relaxed text-muted-foreground">{document.description}</p></div>
-        <article className="doc-prose">
+        <article className="doc-prose docs-article">
           <MDXRemote source={document.source} options={{ mdxOptions: { remarkPlugins: [literalAttributes, headingAnchors] } }} components={{
             Note, Info, Tip, Warning, Check, Danger, Card, CardGroup, Columns, Tabs, Tab, Steps, Step, Accordion, AccordionGroup, Frame, Badge, Tooltip, Emoji, Icon,
             WelcomeBanner,
@@ -49,6 +50,7 @@ h5: (props) => <Heading {...props} level={5} />,
 h6: (props) => <Heading {...props} level={6} />,
           }} />
         </article>
+        <RelatedPages config={activeProduct.config} pages={pages} current={slug} product={productSlug} />
         <div className="flex items-center justify-between border-t pt-6 mt-10"><p className="text-sm text-muted-foreground">A little clarity goes a long way.</p><a href="#main-content" className="text-sm text-muted-foreground transition-colors hover:text-primary">Back to top ↑</a></div>
         <div className="flex gap-4 pt-7">
           {previous && <Link href={pageHref(productSlug, previous.slug)} className="group flex flex-1 items-center gap-4 rounded-xl border p-5 transition-colors hover:border-primary/40"><ArrowLeft className="size-4 text-muted-foreground" /><span className="flex flex-col gap-1"><span className="text-sm text-muted-foreground">Previous</span><span className="text-sm font-medium">{previous.title}</span></span></Link>}

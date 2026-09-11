@@ -15,9 +15,9 @@ async function safePath(...segments: string[]) {
   return target
 }
 
-export async function getProducts(options: { includeDrafts?: boolean } = {}): Promise<Product[]> {
+export async function getProducts(options: { includeDrafts?: boolean; product?: string } = {}): Promise<Product[]> {
   const folders = await readdir(contentRoot, { withFileTypes: true })
-  const products = await Promise.all(folders.filter(folder => folder.isDirectory() && slugSchema.safeParse(folder.name).success).map(async folder => {
+  const products = await Promise.all(folders.filter(folder => folder.isDirectory() && (!options.product || folder.name === options.product) && slugSchema.safeParse(folder.name).success).map(async folder => {
     let raw: unknown = {}
     try {
       raw = JSON.parse(await readFile(await safePath(folder.name, 'config.json'), 'utf8'))
@@ -63,13 +63,13 @@ export async function getPageList(product: string, options: { includeDrafts?: bo
   return walk(await safePath(product))
 }
 
-export async function getDocument(product: string, segments: string[]) {
+export async function getDocument(product: string, segments: string[], options: { includeHeadings?: boolean } = {}) {
   if (!slugSchema.safeParse(product).success || !segments.length || !segments.every(s => slugSchema.safeParse(s).success)) return null
   try {
     const raw = await readFile(await safePath(product, `${segments.join('/')}.mdx`), 'utf8')
     const { data, content } = matter(raw)
     if (data.draft === true) return null
-    const headings = collectHeadings(content)
+    const headings = options.includeHeadings === false ? [] : collectHeadings(content)
     return { source: content, title: typeof data.title === 'string' ? data.title : segments.at(-1)!, description: typeof data.description === 'string' ? data.description : '', headings }
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null

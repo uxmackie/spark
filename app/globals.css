@@ -7,7 +7,7 @@
 :root {
   color-scheme: dark;
   --background: #1a1a1a;
-  --foreground: #eeeeec;
+  --foreground: #ffffff;
   --card: #212121;
   --card-foreground: var(--foreground);
   --popover: #212121;
@@ -25,7 +25,7 @@
   --ring: var(--primary);
   --destructive: var(--primary);
   --radius: 0.625rem;
-  --sidebar: var(--background);
+  --sidebar: #171717;
   --sidebar-foreground: var(--foreground);
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
@@ -37,6 +37,7 @@
 
 /* Root theme survives page remounts and reaches portaled tooltips and menus. */
 :root[data-theme="light"] {
+  --sidebar: #e8e8e6;
   color-scheme: light;
   --background: #eeeeec;
   --foreground: #1a1a1a;
@@ -86,10 +87,10 @@
   :focus-visible { outline: 2px solid var(--ring); outline-offset: 4px; }
 }
 
-.doc-prose { font-size: 15px; line-height: 1.8; color: var(--muted-foreground); }
+.doc-prose { font-size: 16px; line-height: 1.8; color: var(--foreground); }
 .doc-prose > * + * { margin-top: 20px; }
-.doc-prose h2 { margin-top: 38px; font-size: 21px; font-weight: 600; letter-spacing: -0.025em; line-height: 1.4; color: var(--foreground); }
-.doc-prose h3 { margin-top: 28px; font-size: 17px; font-weight: 600; color: var(--foreground); }
+.doc-prose h2 { margin-top: 38px; font-size: 23px; font-weight: 600; letter-spacing: -0.025em; line-height: 1.4; color: var(--foreground); }
+.doc-prose h3 { margin-top: 28px; font-size: 19px; font-weight: 600; color: var(--foreground); }
 .doc-prose strong, .doc-prose b { color: var(--foreground); font-weight: 600; }
 .doc-prose a:not(.doc-card):not(.doc-heading-anchor) { color: var(--primary); text-decoration: none; }
 .doc-prose ul, .doc-prose ol { padding-left: 24px; }

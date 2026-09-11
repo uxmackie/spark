@@ -1,5 +1,5 @@
 'use client'
-import { useState, useRef } from 'react'
+import { useState, useRef, useMemo } from 'react'
 import { SelectionToolbar } from './selection-toolbar'
 import { InlineTools } from './inline-tools'
 import { MdxPreview } from './mdx-preview'
@@ -11,7 +11,7 @@ import { Product } from '@/lib/product-config'
 import { GripVertical, Copy, Trash2, Pencil } from '@/components/icons/font-awesome'
 
 export function VisualCanvas({ source, product, onChange, disabled, pages = [] }: { source: string; product?: Product; onChange: (source: string) => void; disabled: boolean; pages?: { title: string; slug: string }[] }) {
-  const { blocks, error } = parseMdx(source)
+  const { blocks, error } = useMemo(() => parseMdx(source), [source])
   const [dragged, setDragged] = useState<number | null>(null)
   const [over, setOver] = useState<number | null>(null)
   const [epoch, setEpoch] = useState(0)

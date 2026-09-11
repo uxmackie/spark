@@ -40,7 +40,7 @@ export function DocsShell({ products, activeProduct, pages, children }: { produc
     <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur-xl">
       <div className="mx-auto flex h-[76px] max-w-[1600px] items-center justify-between px-5 md:px-9">
         <Link href="/" className="flex items-center gap-1.5" aria-label="Spark home"><Asterisk className="size-9 text-primary" strokeWidth={2.8} /><span className="text-[29px] font-semibold tracking-[-1.5px]">{config.theme.branding}</span><span className="ml-3 hidden border-l pl-4 text-sm text-muted-foreground lg:inline">Documentation</span></Link>
-        <div className="w-10 sm:w-72 lg:w-96"><DocSearch pages={pages} theme={theme} /></div>
+        <div className="w-10 sm:w-72 lg:w-96"><DocSearch key={activeProduct.slug} product={activeProduct.slug} theme={theme} /></div>
         <div className="flex items-center gap-3">
           <DropdownMenu>
             <DropdownMenuTrigger render={<Button variant="ghost" size="lg" />}><span className="hidden sm:inline">Products</span><span className="sm:hidden">Docs</span><ChevronDown data-icon="inline-end" /></DropdownMenuTrigger>
@@ -65,7 +65,7 @@ export function DocsShell({ products, activeProduct, pages, children }: { produc
       </div>
     </header>
     <div className="mx-auto flex max-w-[1600px]">
-      <aside id="docs-sidebar" className={cn('shrink-0 flex-col border-r bg-background lg:sticky lg:top-[125px] lg:flex lg:h-[calc(100dvh-125px)] lg:w-64 xl:w-72', mobileOpen ? 'fixed inset-x-0 top-[125px] z-20 flex h-[calc(100dvh-125px)]' : 'hidden')}>
+      <aside id="docs-sidebar" className={cn('shrink-0 flex-col border-r bg-sidebar lg:sticky lg:top-[125px] lg:flex lg:h-[calc(100dvh-125px)] lg:w-64 xl:w-72', mobileOpen ? 'fixed inset-x-0 top-[125px] z-20 flex h-[calc(100dvh-125px)]' : 'hidden')}>
         <div className="flex-1 overflow-y-auto px-5 py-7 md:px-7">
           <div className="flex items-center gap-3 rounded-lg border bg-card px-3 py-3"><span className="flex size-8 items-center justify-center rounded-md border bg-background text-primary"><ProductIcon name={config.icon} /></span><span className="flex-1 text-sm font-medium">{config.name}</span><span className="text-sm text-muted-foreground">{config.version}</span></div>
           <nav aria-label="Documentation pages" className="flex flex-col gap-6 pt-8">

@@ -37,9 +37,9 @@ function exclusive<T>(work: () => Promise<T>): Promise<T> { const pending = writ
 export type BuilderPage = { slug: string; title: string; description: string; source: string; draft: boolean; fileName: string; revision: string; rawSource: string; frontmatter: Record<string, unknown> }
 export type BuilderProduct = { slug: string; config: ProductConfig; pages: BuilderPage[] }
 export async function readBuilderProduct(slug: string): Promise<BuilderProduct> {
-  const product = (await getProducts()).find(item => item.slug === slug)
+  const product = (await getProducts({ includeDrafts: true })).find(item => item.slug === slug)
   if (!product) throw new Error('Product not found')
-  const pages = await getPageList(slug)
+  const pages = await getPageList(slug, { includeDrafts: true })
   return { ...product, pages: await Promise.all(pages.map(async page => {
     const raw = await readFile(await contentPath(slug, `${page.slug}.mdx`), 'utf8')
     const parsed = matter(raw)
@@ -52,8 +52,11 @@ export async function saveProduct(input: { originalSlug?: string; slug: string; 
     if (input.originalSlug && input.originalSlug !== slug) throw new Error('Product folder renaming is not supported in the editor')
     const config = productConfigSchema.parse(input.config)
     const file = await contentPath(slug, 'config.json')
-    if (!input.create && await readOptional(file) === null) throw new Error('Product no longer exists. Reload before saving.')
-    if (input.create && await readOptional(file) !== null) throw new Error('A product with that path already exists')
+    const directory = await contentPath(slug)
+    let exists = false
+    try { exists = (await lstat(directory)).isDirectory() } catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error }
+    if (!input.create && !exists) throw new Error('Product no longer exists. Reload before saving.')
+    if (input.create && exists) throw new Error('A product with that path already exists')
     await atomicWrite(file, `${JSON.stringify(config, null, 2)}\n`)
     return { slug, config }
   })
@@ -86,8 +89,11 @@ export async function savePage(value: unknown) {
     const output = documentSource({ ...input, frontmatter: input.frontmatter ?? metadata })
     const configPath = await contentPath(input.product, 'config.json')
     const configRaw = await readOptional(configPath)
-    if (configRaw === null) throw new Error('Product no longer exists. Reload before saving.')
-    const config = JSON.parse(configRaw)
+    if (configRaw === null) {
+      try { if (!(await lstat(await contentPath(input.product))).isDirectory()) throw new Error('Missing product') }
+      catch { throw new Error('Product no longer exists. Reload before saving.') }
+    }
+    const config = configRaw ? JSON.parse(configRaw) : parseProductConfig({})
     await atomicWrite(target, output)
     if (config) {
       if (config.navigationTree) {

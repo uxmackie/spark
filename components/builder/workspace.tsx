@@ -73,7 +73,7 @@ export function BuilderWorkspace({ initialProducts }: { initialProducts: Product
   async function loadProduct(slug: string) {
     const id = ++loadId.current
     setBusy(true); setError(''); setStatus('Loading pages…')
-    try { const data = await api(`/api/builder/pages?product=${encodeURIComponent(slug)}`); if (id !== loadId.current) return; setSelected(slug); setPages(data.pages); setPage(null); setOriginal(null); setSaved('null'); setRecovery(null); setPast([]); setFuture([]); setStatus('Ready to write'); if (data.pages.length) openPage(data.pages.find((p: Page) => p.slug === 'index') ?? data.pages[0], slug) }
+    try { const data = await api(`/api/builder/pages?product=${encodeURIComponent(slug)}`); if (id !== loadId.current) return; setSelected(slug); setPages(data.pages); setPage(null); setOriginal(null); setSaved('null'); setRawText(''); setRawDirty(false); setRawError(''); setRecovery(null); setPast([]); setFuture([]); setStatus('Ready to write'); if (data.pages.length) openPage(data.pages.find((p: Page) => p.slug === 'index') ?? data.pages[0], slug) }
     catch (e) { if (id === loadId.current) setError((e as Error).message) }
     finally { if (id === loadId.current) setBusy(false) }
   }
@@ -86,9 +86,9 @@ export function BuilderWorkspace({ initialProducts }: { initialProducts: Product
   }, [dirty])
   useEffect(() => {
     if (!page || !draftKey || !dirty) return
-    const timer = setTimeout(() => { try { localStorage.setItem(draftKey, snapshot(page)); setStatus('Recovery copy saved in this browser') } catch { setStatus('Local recovery unavailable — save your page') } }, 700)
+    const timer = setTimeout(() => { try { localStorage.setItem(draftKey, snapshot({ ...page, rawSource: mode === 'source' ? rawText : documentSource(page) })); setStatus('Recovery copy saved in this browser') } catch { setStatus('Local recovery unavailable — save your page') } }, 700)
     return () => clearTimeout(timer)
-  }, [page, draftKey, dirty])
+  }, [page, draftKey, dirty, mode, rawText])
   function change(update: Partial<Page>) {
     if (!page || busy) return
     setPast(p => [...p.slice(-99), page]); setFuture([]); setPage({ ...page, ...update }); setStatus('Unsaved changes')

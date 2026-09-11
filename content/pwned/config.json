@@ -2,7 +2,7 @@
   "name": "pwned",
   "description": "The home of all free media.",
   "motto": "Free media? Heck yeah!",
-  "version": "v1.1",
+  "version": "v1.4",
   "icon": "terminal",
   "theme": {
     "accent": "#ac80ff",

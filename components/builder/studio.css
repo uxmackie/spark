@@ -23,3 +23,20 @@
 .studio-icon-tooltip-field textarea,.studio-tooltip-form textarea{border:1px solid var(--border);border-radius:6px;padding:8px;background:var(--background);color:var(--foreground);resize:vertical;min-height:80px;width:100%}
 
 .studio-header{position:sticky;top:0;z-index:40;flex-shrink:0;height:65px;min-height:65px;background:var(--background)}.studio-toolbar{position:sticky;top:65px;z-index:39;background:var(--background);box-shadow:0 1px 0 var(--border)}.studio-preview-blocks{display:flex;flex-direction:column;gap:20px}.studio-preview-blocks>.doc-prose{margin:0}.studio-preview-blocks>div>.doc-prose>:first-child{margin-top:0}
+
+/* Source mode: the inert text layer and native input share exact metrics. */
+@font-face{font-family:'Paper Mono';src:local('Paper Mono'),url('https://raw.githubusercontent.com/paper-design/paper-mono/main/fonts/webfonts/PaperMono-Regular.woff2') format('woff2');font-style:normal;font-weight:400;font-display:swap}
+.studio .studio-raw-content{padding:48px 40px 100px}
+.studio .studio-raw-editor{max-width:740px}
+.studio-raw-editor .studio-source-label{border:0;border-radius:0;background:transparent;padding:0 0 24px;font-size:11px;color:var(--muted-foreground)}
+.studio-raw-editor .studio-source-label button{font-size:11px;opacity:.65}
+.studio-code-surface{position:relative;min-height:calc(100vh - 300px)}
+.studio .studio-code-highlight,.studio .studio-code-input{box-sizing:border-box;display:block;width:100%;margin:0;padding:0;border:0;border-radius:0;background:transparent;font-family:'Paper Mono',ui-monospace,SFMono-Regular,Consolas,monospace!important;font-size:13px!important;font-weight:400;line-height:22px;letter-spacing:0;tab-size:2;white-space:pre-wrap;overflow-wrap:anywhere;word-break:normal;font-variant-ligatures:none;text-align:left;text-indent:0}
+.studio .studio-code-highlight{pointer-events:none;min-height:inherit;color:var(--foreground);padding-bottom:22px}
+.studio-code-line{display:block;min-height:22px}
+.studio .studio-code-input{position:absolute;inset:0;height:100%;resize:none;overflow:hidden;color:transparent!important;-webkit-text-fill-color:transparent;caret-color:var(--foreground);outline:none;box-shadow:none}
+.studio-code-input::selection{background:rgba(93,161,226,.3)}
+.studio-code-highlight .source-tag{color:#22863a}.studio-code-highlight .source-string{color:#0869a6}.studio-code-highlight .source-key{color:#8250af}.studio-code-highlight .source-muted{color:#78818a}
+.dark .studio-code-highlight .source-tag{color:#85ed89}.dark .studio-code-highlight .source-string{color:#9cdaff}.dark .studio-code-highlight .source-key{color:#c3b4ff}
+@media(max-width:700px){.studio .studio-raw-content{padding:28px 22px 70px}.studio .studio-code-highlight,.studio .studio-code-input{font-size:12px!important;line-height:21px}.studio-code-line{min-height:21px}}
+@media(forced-colors:active){.studio .studio-code-input{color:CanvasText!important;-webkit-text-fill-color:CanvasText}.studio-code-highlight{visibility:hidden}}

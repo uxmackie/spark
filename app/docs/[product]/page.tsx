@@ -3,8 +3,6 @@ import { getProducts } from '@/lib/content'
 import { flattenNavigation } from '@/lib/navigation'
 import { pageHref } from '@/lib/product-config'
 
-export const dynamic = 'force-dynamic'
-
 export async function generateStaticParams() {
   return (await getProducts()).map(product => ({ product: product.slug }))
 }

@@ -3,8 +3,6 @@ import type { Metadata } from 'next'
 import { Document } from '@/components/docs/document'
 import { getDocument, getPageList, getProducts } from '@/lib/content'
 
-export const dynamic = 'force-dynamic'
-
 type Props = { params: Promise<{ product: string; slug: string[] }> }
 
 export async function generateStaticParams() {
